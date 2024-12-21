@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import Link from 'next/link'
 import { authClient } from "@/lib/auth-client";
 import { redirect } from 'next/navigation'
@@ -13,6 +15,7 @@ export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false)
+    const [rememberMe, setRememberMe] = useState(false);
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -23,20 +26,17 @@ export default function Login() {
         await authClient.signIn.email({
             'email': email,
             'password': password,
+            'rememberMe': rememberMe,
+            'callbackURL': '/'
         }, {
             onRequest: () => {
                 setLoading(true)
-            },
-            onSuccess: () => {
-                redirect("/")
-
             },
             onError: (ctx) => {
                 setLoading(false)
                 toast.error(ctx.error.message)
             }
         })
-        console.log("Logging in with:", { email, password });
     };
 
     return (
@@ -44,19 +44,14 @@ export default function Login() {
             <Card className="bg-gray-100 flex-col p-8 m-4 w-full xs:w-2/3 sm:w-1/2 lg:w-1/3 max-w-xl border-gray-400 shadow-lg">
                 <div className="text-3xl font-bold text-gray-700 text-center mb-8">Login</div>
                 <Button
-
                     className="w-full gap-4 font-bold border-gray-400 border bg-white"
                     onClick={async () => {
                         await authClient.signIn.social({
                             provider: "google",
-                            callbackURL: "/",
+                            callbackURL: "http://localhost:3000/",
                         }, {
                             onRequest: () => {
                                 setLoading(true)
-                            },
-                            onSuccess: () => {
-                                // redirect("/")
-
                             },
                             onError: (ctx) => {
                                 setLoading(false)
@@ -92,24 +87,38 @@ export default function Login() {
 
                 </Button>
                 <div className="flex items-center gap-3 my-5">
-                <div className="h-px flex-1 bg-gray-300"></div>
+                    <div className="h-px flex-1 bg-gray-300"></div>
                     <div className="text-gray-700">OR</div>
                     <div className="h-px flex-1 bg-gray-300"></div>
                 </div>
                 <form onSubmit={handleSubmit} className="flex flex-col">
+                    <Label className="text-gray-700 mb-2"  htmlFor="email">Email</Label>
                     <Input
-                        placeholder="Email"
+                        id="email"
+                        placeholder="user@example.com"
                         className="border-gray-400 text-gray-700 mb-4 bg-white"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
+                    <Label className="text-gray-700 mb-2"  htmlFor="password">Password</Label>
                     <Input
+                        id="password"
                         type="password"
-                        placeholder="Password"
+                        placeholder="password"
                         className="border-gray-400 text-gray-700 mb-4 bg-white"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
+                    <div className="flex items-center gap-2 mb-4">
+                        <Checkbox
+                            id="remember"
+                            className="border-gray-400 bg-white"
+                            onClick={() => {
+                                setRememberMe(!rememberMe);
+                            }}
+                        />
+                        <Label className="text-gray-700"  htmlFor="remember">Remember me</Label>
+                    </div>
                     <Button
                         type="submit"
                         className="bg-blue-500 text-white font-semibold py-2 rounded hover:bg-blue-600 transition duration-200"
