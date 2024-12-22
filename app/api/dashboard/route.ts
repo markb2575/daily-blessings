@@ -31,7 +31,13 @@ export async function GET(req: Request) {
     const formattedDateWithoutTime = new Date(data[0].date).toISOString().split('T')[0];
 
     // Prepare the response data
-    const reference = `${data[0].book} ${data[0].chapter}:${data[0].lowerVerse}-${data[0].upperVerse}`;
+    let reference;
+    if (data[0].lowerVerse == null || data[0].upperVerse == null) {
+        reference = `${data[0].book} ${data[0].chapter}`;
+    } else {
+        reference = `${data[0].book} ${data[0].chapter}:${data[0].lowerVerse}-${data[0].upperVerse}`;
+    }
+    
     const url = `https://www.biblegateway.com/passage/?search=${data[0].book}+${data[0].chapter}:${data[0].lowerVerse}-${data[0].upperVerse}&version=NKJV`;
 
     return Response.json({
