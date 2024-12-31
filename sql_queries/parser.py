@@ -1,5 +1,7 @@
 import csv, re
-with open("sql_queries/data.sql", "w") as write:
+name = "5th Grade"
+with open(f"sql_queries/curriculum_{name}.sql", "w") as write:
+    write.write(f"INSERT INTO dailyblessings.curriculum (name) VALUES ('{name}');\n")
     with open('sql_queries/data.bsv', newline='') as file:
         reader = csv.reader(file, delimiter='|')
         for row in reader:
@@ -8,11 +10,12 @@ with open("sql_queries/data.sql", "w") as write:
             if match:
                 book, chapter, lowerVerse, upperVerse = match.groups()
                 chapter, lowerVerse, upperVerse = int(chapter), int(lowerVerse) if lowerVerse else None, int(upperVerse) if upperVerse else None
-            write.write(f"INSERT INTO dailyblessings.day (date, copticDate, feast, book, chapter, lowerVerse, upperVerse) VALUES ('{row[0]}', '{row[1]}', '{row[2].replace("'","''")}', '{book}', {chapter if chapter is not None else 'NULL'}, {lowerVerse if lowerVerse is not None else 'NULL'}, {upperVerse if upperVerse is not None else 'NULL'});\n")
+            write.write(f"INSERT INTO dailyblessings.day (date, copticDate, feast) VALUES ('{row[0]}', '{row[1]}', '{row[2].replace("'","''")}');\n")
+            write.write(f"INSERT INTO dailyblessings.curriculum_day (curriculumId, date, book, chapter, lowerVerse, upperVerse) VALUES ((SELECT COUNT(*) FROM dailyblessings.curriculum), '{row[0]}', '{book}', {chapter if chapter is not None else 'NULL'}, {lowerVerse if lowerVerse is not None else 'NULL'}, {upperVerse if upperVerse is not None else 'NULL'});\n")
             questions = [row[4],row[5],row[6]]
             for question in questions:
                 if question == '': continue
                 isFillInTheBlank = False
                 if (question.find("_") > -1):
                     isFillInTheBlank = True
-                write.write(f"INSERT INTO dailyblessings.questions (isFillInTheBlank, question, dayId) VALUES ({isFillInTheBlank}, '{question.replace("'","''")}', '{row[0]}');\n")
+                write.write(f"INSERT INTO dailyblessings.curriculum_questions (isFillInTheBlank, question, curriculumId, date) VALUES ({isFillInTheBlank}, '{question.replace("'","''")}', (SELECT COUNT(*) FROM dailyblessings.curriculum), '{row[0]}');\n")
