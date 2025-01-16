@@ -17,7 +17,22 @@ export default function Login() {
     const [loading, setLoading] = useState(false)
     const [rememberMe, setRememberMe] = useState(false);
 
-    const handleSubmit = async (event: React.FormEvent) => {
+    const handleGoogleLogin = async () => {
+        await authClient.signIn.social({
+            provider: "google",
+            callbackURL: "http://localhost:3000/",
+        }, {
+            onRequest: () => {
+                setLoading(true)
+            },
+            onError: (ctx) => {
+                setLoading(false)
+                toast.error(ctx.error.message)
+            }
+        })
+    }
+
+    const handleEmailLogin = async (event: React.FormEvent) => {
         event.preventDefault();
         if (!email || !password) {
             toast.error("Please fill in all fields.")
@@ -45,20 +60,7 @@ export default function Login() {
                 <div className="text-3xl font-bold text-gray-700 text-center mb-8">Login</div>
                 <Button
                     className="w-full gap-4 font-bold border-gray-400 border bg-white"
-                    onClick={async () => {
-                        await authClient.signIn.social({
-                            provider: "google",
-                            callbackURL: "http://localhost:3000/",
-                        }, {
-                            onRequest: () => {
-                                setLoading(true)
-                            },
-                            onError: (ctx) => {
-                                setLoading(false)
-                                toast.error(ctx.error.message)
-                            }
-                        })
-                    }}
+                    onClick={handleGoogleLogin}
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -91,7 +93,7 @@ export default function Login() {
                     <div className="text-gray-700">OR</div>
                     <div className="h-px flex-1 bg-gray-300"></div>
                 </div>
-                <form onSubmit={handleSubmit} className="flex flex-col">
+                <form onSubmit={handleEmailLogin} className="flex flex-col">
                     <Label className="text-gray-700 mb-2"  htmlFor="email">Email</Label>
                     <Input
                         id="email"

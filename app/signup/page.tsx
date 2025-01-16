@@ -18,7 +18,23 @@ export default function Signup() {
     const [loading, setLoading] = useState(false)
     const [confirmedPassword, setConfirmedPassword] = useState("")
 
-    const handleSubmit = async (event: React.FormEvent) => {
+    const handleGoogleSignup = async () => {
+        await authClient.signIn.social({
+            provider: "google",
+            callbackURL: "http://localhost:3000/",
+        }, {
+            onRequest: () => {
+                setLoading(true)
+            },
+            onError: (ctx) => {
+                setLoading(false)
+                toast.error(ctx.error.message)
+            }
+        })
+    
+    }
+
+    const handleEmailSignup = async (event: React.FormEvent) => {
         event.preventDefault();
         if (!email || !password || !firstName || !lastName) {
             toast.error("Please fill in all fields.")
@@ -53,22 +69,8 @@ export default function Signup() {
             <Card className="bg-neutral-100 flex-col p-8 m-4 w-full xs:w-2/3 sm:w-1/2 lg:w-1/3 max-w-xl border-neutral-400 shadow-lg">
                 <div className="text-3xl font-bold text-neutral-700 text-center mb-8">Signup</div>
                 <Button
-
                     className="w-full gap-4 font-bold border-neutral-400 border bg-white"
-                    onClick={async () => {
-                        await authClient.signIn.social({
-                            provider: "google",
-                            callbackURL: "http://localhost:3000/",
-                        }, {
-                            onRequest: () => {
-                                setLoading(true)
-                            },
-                            onError: (ctx) => {
-                                setLoading(false)
-                                toast.error(ctx.error.message)
-                            }
-                        })
-                    }}
+                    onClick={handleGoogleSignup}
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -101,7 +103,7 @@ export default function Signup() {
                     <div className="text-neutral-700">OR</div>
                     <div className="h-px flex-1 bg-neutral-300"></div>
                 </div>
-                <form onSubmit={handleSubmit} className="flex flex-col">
+                <form onSubmit={handleEmailSignup} className="flex flex-col">
                 <div className="grid grid-cols-2 gap-4">
 						<div className="grid">
 							<Label htmlFor="first-name" className="text-neutral-700 mb-2">First name</Label>
