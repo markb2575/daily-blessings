@@ -1,11 +1,11 @@
 import { mysqlTable, varchar, text, int, timestamp, boolean, date, primaryKey, foreignKey } from "drizzle-orm/mysql-core";
 
 export const user = mysqlTable("user", {
-    userId: varchar("userId", { length: 36 }).primaryKey(),
+    id: varchar("id", { length: 36 }).primaryKey(),
     name: text('name').notNull(),
     email: varchar('email', { length: 255 }).notNull().unique(),
     emailVerified: boolean('emailVerified').notNull(),
-    role: text('role').notNull(),
+    role: varchar("role", { length: 12 }).default("none").notNull(),
     image: text('image'),
     createdAt: timestamp('createdAt').notNull(),
     updatedAt: timestamp('updatedAt').notNull()
@@ -54,7 +54,7 @@ export const classroom = mysqlTable("classroom", {
 
 export const classroom_member = mysqlTable("classroom_member", {
     classroomId: int("classroomId").notNull().references(() => classroom.classroomId),
-    userId: varchar('userId', { length: 36 }).notNull().references(() => user.userId),
+    userId: varchar('userId', { length: 36 }).notNull().references(() => user.id),
 }, (table) => {
     return {
         pk: primaryKey({ columns: [table.classroomId, table.userId] }),
@@ -65,7 +65,7 @@ export const answers = mysqlTable("answers", {
     answerId: int("answerId").primaryKey().autoincrement(),
     questionId: int("questionId").notNull().references(() => curriculum_questions.questionId),
     answer: text().notNull(),
-    userId: varchar('userId', { length: 36 }).notNull().references(() => user.userId),
+    userId: varchar('userId', { length: 36 }).notNull().references(() => user.id),
     createdAt: timestamp('createdAt').notNull().defaultNow(),
 });
 
@@ -77,14 +77,14 @@ export const session = mysqlTable("session", {
     updatedAt: timestamp('updatedAt').notNull(),
     ipAddress: text('ipAddress'),
     userAgent: text('userAgent'),
-    userId: varchar('userId', { length: 36 }).notNull().references(() => user.userId)
+    userId: varchar('userId', { length: 36 }).notNull().references(() => user.id)
 });
 
 export const account = mysqlTable("account", {
     id: varchar("id", { length: 36 }).primaryKey(),
     accountId: text('accountId').notNull(),
     providerId: text('providerId').notNull(),
-    userId: varchar('userId', { length: 36 }).notNull().references(() => user.userId),
+    userId: varchar('userId', { length: 36 }).notNull().references(() => user.id),
     accessToken: text('accessToken'),
     refreshToken: text('refreshToken'),
     idToken: text('idToken'),

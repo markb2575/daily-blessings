@@ -32,7 +32,7 @@ export default function Signup() {
         const { data, error } = await authClient.signUp.email({
             'email': email,
             'password': password,
-            'name': `${firstName} ${lastName}`,
+            'name': `${firstName} ${lastName}`
         }, {
             onRequest: (ctx) => {
                 setLoading(true)

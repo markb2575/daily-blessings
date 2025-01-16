@@ -87,15 +87,15 @@ CREATE TABLE `session` (
 	CONSTRAINT `session_token_unique` UNIQUE(`token`)
 );
 CREATE TABLE `user` (
-	`userId` varchar(36) NOT NULL,
+	`id` varchar(36) NOT NULL,
 	`name` text NOT NULL,
 	`email` varchar(255) NOT NULL,
 	`emailVerified` boolean NOT NULL,
-	`role` text NOT NULL,
+	`role` varchar(12) DEFAULT 'none' NOT NULL,
 	`image` text,
 	`createdAt` timestamp NOT NULL,
 	`updatedAt` timestamp NOT NULL,
-	CONSTRAINT `user_userId` PRIMARY KEY(`userId`),
+	CONSTRAINT `user_id` PRIMARY KEY(`id`),
 	CONSTRAINT `user_email_unique` UNIQUE(`email`)
 );
 CREATE TABLE `verification` (
@@ -107,13 +107,13 @@ CREATE TABLE `verification` (
 	`updatedAt` timestamp,
 	CONSTRAINT `verification_id` PRIMARY KEY(`id`)
 );
-ALTER TABLE `account` ADD CONSTRAINT `account_userId_user_userId_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`userId`) ON DELETE no action ON UPDATE no action;
+ALTER TABLE `account` ADD CONSTRAINT `account_userId_user_id_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE no action ON UPDATE no action;
 ALTER TABLE `answers` ADD CONSTRAINT `answers_questionId_curriculum_questions_questionId_fk` FOREIGN KEY (`questionId`) REFERENCES `curriculum_questions`(`questionId`) ON DELETE no action ON UPDATE no action;
-ALTER TABLE `answers` ADD CONSTRAINT `answers_userId_user_userId_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`userId`) ON DELETE no action ON UPDATE no action;
+ALTER TABLE `answers` ADD CONSTRAINT `answers_userId_user_id_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE no action ON UPDATE no action;
 ALTER TABLE `classroom` ADD CONSTRAINT `classroom_curriculumId_curriculum_curriculumId_fk` FOREIGN KEY (`curriculumId`) REFERENCES `curriculum`(`curriculumId`) ON DELETE no action ON UPDATE no action;
 ALTER TABLE `classroom_member` ADD CONSTRAINT `classroom_member_classroomId_classroom_classroomId_fk` FOREIGN KEY (`classroomId`) REFERENCES `classroom`(`classroomId`) ON DELETE no action ON UPDATE no action;
-ALTER TABLE `classroom_member` ADD CONSTRAINT `classroom_member_userId_user_userId_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`userId`) ON DELETE no action ON UPDATE no action;
+ALTER TABLE `classroom_member` ADD CONSTRAINT `classroom_member_userId_user_id_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE no action ON UPDATE no action;
 ALTER TABLE `curriculum_day` ADD CONSTRAINT `curriculum_day_curriculumId_curriculum_curriculumId_fk` FOREIGN KEY (`curriculumId`) REFERENCES `curriculum`(`curriculumId`) ON DELETE no action ON UPDATE no action;
 ALTER TABLE `curriculum_day` ADD CONSTRAINT `curriculum_day_date_day_date_fk` FOREIGN KEY (`date`) REFERENCES `day`(`date`) ON DELETE no action ON UPDATE no action;
 ALTER TABLE `curriculum_questions` ADD CONSTRAINT `curric_quest_curric_day_fk` FOREIGN KEY (`curriculumId`,`date`) REFERENCES `curriculum_day`(`curriculumId`,`date`) ON DELETE no action ON UPDATE no action;
-ALTER TABLE `session` ADD CONSTRAINT `session_userId_user_userId_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`userId`) ON DELETE no action ON UPDATE no action;
+ALTER TABLE `session` ADD CONSTRAINT `session_userId_user_id_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE no action ON UPDATE no action;
