@@ -16,6 +16,22 @@ export async function GET(req: Request) {
     const userRole = await db.select({ role: user.role }).from(user).where(eq(user.id, id));
     console.log("role: ", userRole);
     return Response.json({
-       hasRole: userRole[0].role == "none" ? false : true
+       role: userRole[0].role
+    });
+}
+
+export async function POST(req: Request) {
+    const id = req.headers.get('id');
+    const role = req.headers.get('role')
+    if (id == null || role == null) {
+        return Response.json({
+            'success':false
+        });
+    }
+
+    await db.update(user).set({role: role}).where(eq(user.id, id))
+
+    return Response.json({
+       'success':true
     });
 }
