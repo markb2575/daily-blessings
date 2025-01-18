@@ -66,11 +66,11 @@ export default function Signup() {
     };
 
     return (
-        <div className="font-montserrat min-h-screen flex items-center justify-center     grid place-items-center h-screen flex-col w-screen">
+        <div className="font-montserrat min-h-screen flex items-center justify-center place-items-center h-screen flex-col w-screen">
             <div className="w-[300px]">
                 <div className="text-3xl font-bold text-neutral-700 text-center mb-8">Signup</div>
                 <Button
-                    className="w-full gap-4 font-bold border-neutral-400 border bg-white"
+                    className="w-full gap-4 font-bold border-neutral-400 border bg-white hover:bg-gray-300"
                     onClick={handleGoogleSignup}
                 >
                     <svg
