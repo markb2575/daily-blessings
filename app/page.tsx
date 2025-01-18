@@ -26,17 +26,17 @@ export default function Home() {
     const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
     const fetchData = async () => {
-        const response = await fetch('/api/dashboard', {
-            headers: {
-                'timezone': userTimeZone,
-            }
-        });
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setData(data);
-        console.log(data);
+        // const response = await fetch('/api/dashboard', {
+        //     headers: {
+        //         'timezone': userTimeZone,
+        //     }
+        // });
+        // if (!response.ok) {
+        //     throw new Error('Network response was not ok');
+        // }
+        // const data = await response.json();
+        // setData(data);
+        // console.log(data);
     };
 
     useEffect(() => {

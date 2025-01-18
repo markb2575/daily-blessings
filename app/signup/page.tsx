@@ -21,7 +21,8 @@ export default function Signup() {
     const handleGoogleSignup = async () => {
         await authClient.signIn.social({
             provider: "google",
-            callbackURL: "http://localhost:3000/",
+            callbackURL: "/",
+            newUserCallbackURL: "/onboarding"
         }, {
             onRequest: () => {
                 setLoading(true)
@@ -54,7 +55,7 @@ export default function Signup() {
                 setLoading(true)
             },
             onSuccess: (ctx) => {
-                redirect("/")
+                redirect("/onboarding")
             },
             onError: (ctx) => {
                 setLoading(false)

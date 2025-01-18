@@ -20,7 +20,8 @@ export default function Login() {
     const handleGoogleLogin = async () => {
         await authClient.signIn.social({
             provider: "google",
-            callbackURL: "http://localhost:3000/",
+            callbackURL: "/",
+            newUserCallbackURL: "/onboarding"
         }, {
             onRequest: () => {
                 setLoading(true)
