@@ -54,10 +54,10 @@ export default function Home() {
 
     if (roleChecked) {
         return (
-            <div className=" font-montserrat ">
+            <div className=" font-montserrat grid place-items-center h-screen ">
                 {/*{data &&*/}
                 <div>
-                    <div className="text-xl font-semibold text-gray-800">Welcome, {session.data?.user.name}!</div>
+                    <div className="text-xl font-semibold text-gray-800 space-y-20 text-center">Welcome, {session.data?.user.name}!</div>
                     {/*<div className="font-medium">{data.date}</div>*/}
                     {/*<div className="font-medium">{data.copticDate}</div>*/}
                     {/*<div className="font-medium">{data.feast}</div>*/}
@@ -65,7 +65,7 @@ export default function Home() {
                     {/*    {data.reading}*/}
                     {/*</a></div>*/}
                     <Button
-                        className="gap-4 font-bold text-white bg-blue-600 hover:bg-blue-700 transition duration-200"
+                        className="font-bold text-white bg-blue-600 hover:bg-blue-700 transition duration-200 ml-[50px]"
                         onClick={handleSignOut}
                     >
                         Sign Out
