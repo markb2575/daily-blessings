@@ -45,24 +45,24 @@ export default function Home() {
 
     return (
         <div className=" font-montserrat ">
-            {data &&
+            {/*{data &&*/}
                 <div>
                     <div className="text-xl font-semibold text-gray-800">Welcome, {session.data?.user.name}!</div>
-                    <div className="font-medium">{data.date}</div>
-                    <div className="font-medium">{data.copticDate}</div>
-                    <div className="font-medium">{data.feast}</div>
-                    <div><a href={data.bibleUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                        {data.reading}
-                    </a></div>
+                    {/*<div className="font-medium">{data.date}</div>*/}
+                    {/*<div className="font-medium">{data.copticDate}</div>*/}
+                    {/*<div className="font-medium">{data.feast}</div>*/}
+                    {/*<div><a href={data.bibleUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">*/}
+                    {/*    {data.reading}*/}
+                    {/*</a></div>*/}
                     <Button
                         className="gap-4 font-bold text-white bg-blue-600 hover:bg-blue-700 transition duration-200"
                         onClick={handleSignOut}
                     >
                         Sign Out
                     </Button>
-                    <Questions />
+                    {/*<Questions />*/}
                 </div>
-            }
+            {/*}*/}
         </div>
     );
 }
