@@ -9,11 +9,13 @@ import { Label } from "@/components/ui/label";
 import Link from 'next/link'
 import { authClient } from "@/lib/auth-client";
 import { redirect } from 'next/navigation'
+import { LucideGraduationCap, LucideSchool } from "lucide-react";
 import { toast } from 'sonner';
 
 export default function Login() {
     const session = authClient.useSession();
     const [role, setRole] = useState("student");
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         checkRole();
@@ -24,46 +26,63 @@ export default function Login() {
 
         if (id == undefined) return;
 
-        const response = await fetch('/api/user/hasRole', {
+        await fetch('/api/user/hasRole', {
             headers: {
                 'id': id || ''
             }
-        });
-
-        const object = await response.json()
-        console.log(object.hasRole);
-
-        if (object.hasRole) {
-            redirect("/dashboard");
-        }
-
+        }).then(response => {
+            // Check if the request was successful
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // Parse the response as JSON
+            return response.json();
+        }).then(data => {
+            if (data.hasRole) {
+                redirect("/dashboard");
+            }
+        })
     }
     return (
         <div className="font-montserrat min-h-screen flex items-center justify-center">
-            <Card className="bg-gray-100 flex-col p-8 m-4 w-full xs:w-2/3 sm:w-1/2 lg:w-1/3 max-w-xl border-gray-400 shadow-lg">
-                <div className="text-3xl font-bold text-gray-700 text-center mb-8">Choose your account type</div>
-                <div className="flex space-x-4
-                ">
+            <Card className="bg-gray-100 flex-col p-8 m-4 w-full xs:w-2/3 sm:w-1/2 lg:w-1/3 max-w-xl border-gray-400 shadow-lg flex">
+                {/* <div className="text-3xl font-bold text-gray-700 mb-6">Onboarding</div> */}
+                <Label className="text-gray-700 mb-4 text-lg">I am a...</Label>
+                <div className="flex-col flex gap-4">
                     <Button
-                        className={`w-full gap-4 mx2 w-1/2 font-bold border bg-white hover:bg-gray-50 ${role === "teacher" ? "bg-blue-500 hover:bg-blue-600 text-white" : "bg-white"}`}
+                        className={`[&_svg]:size-5 mx2 w-full h-14 font-bold justify-start border-2 border-gray-400 bg-white  ${role === "teacher" ? " border-blue-400 " : " border-0"}`}
                         onClick={() => {
                             setRole("teacher")
                             console.log("setting teacher role");
                         }}
                     >
-                        <div className="text-gray-700">Teacher</div>
+                        <div>
+                            <div className="flex flex-row text-base gap-2"><LucideSchool />Teacher</div>
+                            <div className="text-gray-700 text-xs">Teacher can create classes</div>
+                        </div>
                     </Button>
                     <Button
-                        className={` w-full gap-4 mx2 w-1/2 font-bold border bg-white hover:bg-gray-50 ${role === "student" ? "bg-blue-500 hover:bg-blue-600 text-white" : "bg-white"}`}
+                        className={`[&_svg]:size-5 mx2 w-full h-14 font-bold justify-start border-2 border-gray-400 bg-white  ${role === "student" ? " border-blue-400 " : " border-0"}`}
                         onClick={() => {
                             setRole("student")
                             console.log("setting student role");
                         }}
                     >
-                        <div className="text-gray-700">Student</div>
+                        <div>
+                            <div className="flex flex-row text-base gap-2"><LucideGraduationCap />Student</div>
+                            <div className="text-gray-700 text-xs">Students can join classes with a code</div>
+                        </div>
+                    </Button>
+                    <Button
+                        type="submit"
+                        className="bg-blue-500 text-white font-semibold py-2 rounded hover:bg-blue-600 transition duration-200"
+
+                    >
+                        {!loading ? "Get Started" : <div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div>}
                     </Button>
                 </div>
             </Card>
         </div>
+
     )
 }
