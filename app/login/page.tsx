@@ -56,8 +56,8 @@ export default function Login() {
     };
 
     return (
-        <div className="font-montserrat min-h-screen flex items-center justify-center">
-            <Card className="bg-gray-100 flex-col p-8 m-4 w-full xs:w-2/3 sm:w-1/2 lg:w-1/3 max-w-xl border-gray-400 shadow-lg">
+        <div className="font-montserrat min-h-screen flex items-center justify-center     grid place-items-center h-screen flex-col w-screen">
+            <div className="w-[300px]">
                 <div className="text-3xl font-bold text-gray-700 text-center mb-8">Login</div>
                 <Button
                     className="w-full gap-4 font-bold border-gray-400 border bg-white"
@@ -132,7 +132,7 @@ export default function Login() {
                 <div className="flex-row flex gap-2 mt-5 text-sm">
                     <div>Need an account?</div><Link href={"/signup"} className="font-bold text-blue-700">Signup</Link>
                 </div>
-            </Card>
+            </div>
         </div>
     );
 }
