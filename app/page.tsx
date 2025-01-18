@@ -7,45 +7,55 @@ import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import Questions from "@/components/questions";
 
-interface DashboardData {
-    date: string;
-    copticDate: string;
-    feast: string;
-    reading: string;
-    bibleUrl: string;
-}
+// interface DashboardData {
+//     date: string;
+//     copticDate: string;
+//     feast: string;
+//     reading: string;
+//     bibleUrl: string;
+// }
 
 export default function Home() {
-    const [data, setData] = useState<DashboardData | null>(null);
+    // const [data, setData] = useState<DashboardData | null>(null);
+    const [roleChecked, setRoleChecked] = useState(false);
     const session = authClient.useSession();
     const handleSignOut = async () => {
         await authClient.signOut();
         redirect('/login');
     };
 
-    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-    const fetchData = async () => {
-        // const response = await fetch('/api/dashboard', {
-        //     headers: {
-        //         'timezone': userTimeZone,
-        //     }
-        // });
-        // if (!response.ok) {
-        //     throw new Error('Network response was not ok');
-        // }
-        // const data = await response.json();
-        // setData(data);
-        // console.log(data);
-    };
-
+    // const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     useEffect(() => {
-        fetchData();
-    }, []);
+        checkRole();
+    }, [session.data?.session.userId]);
 
-    return (
-        <div className=" font-montserrat ">
-            {/*{data &&*/}
+    const checkRole = async () => {
+        const id = session.data?.session.userId
+
+        if (id == undefined) return;
+        await fetch('/api/user/role', {
+            method: 'GET',
+            headers: {
+                'id': id || ''
+            }
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        }).then(data => {
+            console.log(data.role)
+            if (data.role === "none") {
+                redirect("/onboarding");
+            }
+            setRoleChecked(true)
+        })
+    }
+
+    if (roleChecked) {
+        return (
+            <div className=" font-montserrat ">
+                {/*{data &&*/}
                 <div>
                     <div className="text-xl font-semibold text-gray-800">Welcome, {session.data?.user.name}!</div>
                     {/*<div className="font-medium">{data.date}</div>*/}
@@ -62,7 +72,10 @@ export default function Home() {
                     </Button>
                     {/*<Questions />*/}
                 </div>
-            {/*}*/}
-        </div>
-    );
+                {/*}*/}
+            </div>
+        );
+    } else {
+        return null
+    }
 }
