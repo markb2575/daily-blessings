@@ -89,7 +89,7 @@ export default function Home() {
                     right={
                         <div className='flex items-center gap-4'>
                             <DropdownMenu>
-                                <DropdownMenuTrigger asChild className='hover:bg-gray-100 rounded-full p-1 '>
+                                <DropdownMenuTrigger asChild className='hover:bg-gray-100 rounded-full p-1 transition ease-in'>
                                     <Plus size={32}/>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className='font-Open_Sans absolute -right-5 top-0.5 bg-white font-medium'>
@@ -104,11 +104,9 @@ export default function Home() {
                                     </DropdownMenuGroup>
                                 </DropdownMenuContent>
                             </DropdownMenu>
-
-
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Avatar className='items-center justify-center bg-gray-100 border-2 border-white hover:border-gray-200 size-11'>
+                                    <Avatar className='items-center justify-center bg-gray-100 border-2 border-white hover:border-gray-200 size-11  transition ease-in'>
                                         <AvatarImage
                                             src={
                                                 session.data?.user.image
