@@ -39,6 +39,8 @@ CREATE TABLE `answers` (
 CREATE TABLE `classroom` (
 	`classroomId` int AUTO_INCREMENT NOT NULL,
 	`curriculumId` int NOT NULL,
+    `studentCode` varchar(7) NOT NULL,
+    `teacherCode` varchar(7) NOT NULL,
 	CONSTRAINT `classroom_classroomId` PRIMARY KEY(`classroomId`)
 );
 CREATE TABLE `classroom_member` (

@@ -15,6 +15,13 @@
       "when": 1737000436664,
       "tag": "0001_remarkable_patch",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1737420553365,
+      "tag": "0002_free_alex_wilder",
+      "breakpoints": true
     }
   ]
 }

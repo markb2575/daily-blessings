@@ -56,7 +56,7 @@ export default function Login() {
     }
     if (roleChecked) {
         return (
-            <div className="font-montserrat min-h-screen flex items-center justify-center">
+            <div className="font-Open_Sans min-h-screen flex items-center justify-center">
                 <Card className="bg-gray-100 flex-col p-8 m-4 w-full xs:w-2/3 sm:w-1/2 lg:w-1/3 max-w-xl border-gray-400 shadow-lg flex">
                     <Label className="text-gray-700 mb-4 text-lg">I am a...</Label>
                     <div className="flex-col flex gap-4">

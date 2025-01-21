@@ -66,7 +66,7 @@ export default function Signup() {
     };
 
     return (
-        <div className="font-montserrat min-h-screen flex items-center justify-center place-items-center h-screen flex-col w-screen">
+        <div className="font-Open_Sans min-h-screen flex items-center justify-center place-items-center h-screen flex-col w-screen">
             <div className="w-[350px]">
                 <div className="text-3xl font-bold text-neutral-700 text-center mb-8">Signup</div>
                 <Button

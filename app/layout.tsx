@@ -4,12 +4,12 @@ import "./globals.css";
 import { Toaster } from 'sonner'
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
+  variable: "--font-Open_Sans-sans",
   subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+  variable: "--font-Open_Sans-mono",
   subsets: ["latin"],
 });
 
