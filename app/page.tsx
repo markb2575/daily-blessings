@@ -89,10 +89,10 @@ export default function Home() {
                     right={
                         <div className='flex items-center gap-4'>
                             <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Plus/>
+                                <DropdownMenuTrigger asChild className='hover:bg-gray-100 rounded-full p-1 '>
+                                    <Plus size={32}/>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent className='font-Open_Sans my-2 mx-16 bg-white font-medium'>
+                                <DropdownMenuContent className='font-Open_Sans absolute -right-5 top-0.5 bg-white font-medium'>
                                     <DropdownMenuGroup>
                                         <DropdownMenuItem className='focus:bg-gray-100'>
                                             <span>Join Class</span>
@@ -108,7 +108,7 @@ export default function Home() {
 
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Avatar className='items-center justify-center bg-gray-200 border-4 border-white hover:border-gray-200 size-12'>
+                                    <Avatar className='items-center justify-center bg-gray-100 border-2 border-white hover:border-gray-200 size-11'>
                                         <AvatarImage
                                             src={
                                                 session.data?.user.image
@@ -119,7 +119,7 @@ export default function Home() {
                                         <User />
                                     </Avatar>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent className='font-Open_Sans mx-2 -my-1 w-40 bg-white font-medium'>
+                                <DropdownMenuContent className='font-Open_Sans absolute -right-5 -top-1 w-40 bg-white font-medium'>
                                     <DropdownMenuGroup>
                                         <DropdownMenuItem className='focus:bg-gray-100'>
                                             <Settings />
@@ -133,7 +133,7 @@ export default function Home() {
                                             className='focus:bg-gray-100 focus:text-red-500'
                                         >
                                             <LogOut />
-                                            <span>Log out</span>
+                                            <span>Sign out</span>
                                         </DropdownMenuItem>
                                     </DropdownMenuGroup>
                                 </DropdownMenuContent>
