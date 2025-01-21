@@ -81,24 +81,27 @@ export default function Home() {
                     left={
                         <div className='flex items-center gap-4'>
                             <div className='size-8 rounded-md bg-gray-200' />
-                            <div className='text-xl font-medium'>
+                            <div className='text-xl font-medium cursor-default'>
                                 Daily Blessings
                             </div>
                         </div>
                     }
                     right={
                         <div className='flex items-center gap-4'>
+                            <button className='bg-yellow-200 text-yellow-500 font-semibold py-2 px-2 rounded hover:bg-yellow-500 hover:text-white transition duration-200 hover:-translate-y-1 hover:scale-200 text-[15px]'>
+                                Blessings Shop
+                            </button>
                             <DropdownMenu>
-                                <DropdownMenuTrigger asChild className='hover:bg-gray-100 rounded-full p-1 transition ease-in'>
+                                <DropdownMenuTrigger asChild className='hover:bg-gray-100 rounded-full p-1 transition ease-in cursor-pointer'>
                                     <Plus size={32}/>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className='font-Open_Sans absolute -right-5 top-0.5 bg-white font-medium'>
                                     <DropdownMenuGroup>
-                                        <DropdownMenuItem className='focus:bg-gray-100'>
+                                        <DropdownMenuItem className='focus:bg-gray-100 cursor-pointer'>
                                             <span>Join Class</span>
                                         </DropdownMenuItem>
                                         <DropdownMenuSeparator className='bg-gray-200' />
-                                        <DropdownMenuItem className='focus:bg-gray-100'>
+                                        <DropdownMenuItem className='focus:bg-gray-100 cursor-pointer'>
                                             <span>Create Class</span>
                                         </DropdownMenuItem>
                                     </DropdownMenuGroup>
@@ -106,7 +109,7 @@ export default function Home() {
                             </DropdownMenu>
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Avatar className='items-center justify-center bg-gray-100 border-2 border-white hover:border-gray-200 size-11  transition ease-in'>
+                                    <Avatar className='items-center justify-center bg-gray-100 border-2 border-white hover:border-gray-200 size-11  transition ease-in cursor-pointer'>
                                         <AvatarImage
                                             src={
                                                 session.data?.user.image
@@ -117,9 +120,9 @@ export default function Home() {
                                         <User />
                                     </Avatar>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent className='font-Open_Sans absolute -right-5 -top-1 w-40 bg-white font-medium'>
+                                <DropdownMenuContent className='font-Open_Sans absolute -right-5 -top-1 w-40 bg-white font-medium cursor-pointer'>
                                     <DropdownMenuGroup>
-                                        <DropdownMenuItem className='focus:bg-gray-100'>
+                                        <DropdownMenuItem className='focus:bg-gray-100 cursor-pointer'>
                                             <Settings />
                                             <span>Settings</span>
                                         </DropdownMenuItem>
@@ -128,7 +131,7 @@ export default function Home() {
                                     <DropdownMenuGroup>
                                         <DropdownMenuItem
                                             onClick={handleSignOut}
-                                            className='focus:bg-gray-100 focus:text-red-500'
+                                            className='focus:bg-gray-100 focus:text-red-500 cursor-pointer'
                                         >
                                             <LogOut />
                                             <span>Sign out</span>
@@ -140,7 +143,7 @@ export default function Home() {
                     }
                 />
                 <div>
-                    <div className='space-y-20 text-center text-xl font-semibold text-gray-800'>
+                    <div className='space-y-20 text-center text-xl font-semibold text-gray-800 hover:animate-pulse cursor-default'>
                         Welcome, {session.data?.user.name}!
                     </div>
                 </div>
