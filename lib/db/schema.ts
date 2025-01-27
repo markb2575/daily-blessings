@@ -50,6 +50,7 @@ export const curriculum_questions = mysqlTable("curriculum_questions", {
 export const classroom = mysqlTable("classroom", {
     classroomId: int("classroomId").primaryKey().autoincrement(),
     curriculumId: int("curriculumId").notNull().references(() => curriculum.curriculumId),
+    classroomName: varchar('classroomName', { length: 24}).notNull(),
     studentCode: varchar('studentCode', { length: 7 }).notNull(),
     teacherCode: varchar('teacherCode', { length: 7 }).notNull()
 });

@@ -150,9 +150,9 @@ export default function Signup() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    <Label htmlFor="password" className="text-neutral-700 mb-2">Confirm Password</Label>
+                    <Label htmlFor="confirm password" className="text-neutral-700 mb-2">Confirm Password</Label>
                     <Input
-                        id="password"
+                        id="confirm password"
                         type="password"
                         placeholder="confirm password"
                         className="border-neutral-400 text-neutral-700 mb-4 bg-white"
