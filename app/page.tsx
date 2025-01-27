@@ -39,6 +39,7 @@ import {
 } from '@/components/ui/select'
 import CreateClassroom from '@/components/modules/create-classroom'
 import JoinClassroom from '@/components/modules/join-classroom'
+import { ClassTable } from '@/components/modules/class-table'
 
 export default function Home() {
     const [role, setRole] = useState('none')
@@ -81,7 +82,7 @@ export default function Home() {
 
     if (role !== 'none') {
         return (
-            <div className='grid h-screen place-items-center font-Open_Sans'>
+            <div className='font-Open_Sans min-h-screen flex justify-center'>
                 <Navbar
                     left={
                         <div className='flex items-center gap-4'>
@@ -93,11 +94,13 @@ export default function Home() {
                     }
                     right={
                         <div className='flex items-center gap-4'>
-                            <button className='hover:scale-200 rounded bg-yellow-200 px-2 py-2 text-[15px] font-semibold text-yellow-500 transition duration-200 hover:-translate-y-1 hover:bg-yellow-500 hover:text-white'>
+                            {/* <button className='hover:scale-200 rounded bg-yellow-200 px-2 py-2 text-[15px] font-semibold text-yellow-500 transition duration-200 hover:-translate-y-1 hover:bg-yellow-500 hover:text-white'>
                                 Blessings Shop
-                            </button>
+                            </button> */}
 
-                            <CreateClassroom userId={session.data?.session.userId}/>
+                            <CreateClassroom
+                                userId={session.data?.session.userId}
+                            />
 
                             <JoinClassroom />
 
@@ -140,11 +143,17 @@ export default function Home() {
                         </div>
                     }
                 />
-                <div>
-                    <div className='cursor-default space-y-20 text-center text-xl font-semibold text-gray-800 hover:animate-pulse'>
+
+                <div className= 'mt-24 mx-10'>
+                    <div className='cursor-default space-y-20 mb-8 text-2xl font-semibold'>
                         Welcome, {session.data?.user.name}! You are a {role}
                     </div>
-                </div>
+                    <ClassTable/>
+                </div>    
+                    
+                    
+                   
+
             </div>
         )
     } else {
