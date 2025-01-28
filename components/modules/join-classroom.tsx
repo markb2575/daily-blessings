@@ -7,6 +7,7 @@ import { Label } from '../ui/label'
 import { Input } from '../ui/input'
 import { LogIn } from 'lucide-react'
 import { authClient } from '@/lib/auth-client'
+import { toast } from 'sonner'
 import {
     DialogHeader,
     DialogTitle,
@@ -26,19 +27,26 @@ import {
 import { classroom } from '@/lib/db/schema'
 
 export default function JoinClassroom({ role }: { role: string }) {
-    // const [curriculums, setCurriculums] = useState([])
-    // const [curriculumId, setCurriculumId] = useState('')
+    const [JoinClass, setJoinClass] = useState('') //I think this is usless and makes no sense because you not putting this into the api you just fetching it so you dont need to store it right?
     const [code, setCode] = useState('')
     const session = authClient.useSession()
+
     
     
     const resetForm = () => {
         setCode('')
     }
-
+    
+    
     const joinClass = async () =>{
         console.log("studentCode from class",code);
         console.log("DataId From class",session.data?.session.userId );
+
+        if (code === '') {
+            toast.error("Text not input ")
+            return; 
+        }
+
         await fetch('/api/classroom_member', {
             method: 'POST',
             body: JSON.stringify({
@@ -48,9 +56,9 @@ export default function JoinClassroom({ role }: { role: string }) {
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok')
+                    toast.error("Unable to join class")
                 }
-                return response.json()
+                return response
             })
             
             .then(data => {
@@ -58,8 +66,6 @@ export default function JoinClassroom({ role }: { role: string }) {
             })
     }
     
-    
-   
     return (
         <Dialog onOpenChange={resetForm}>
             <DialogTrigger asChild>
@@ -89,10 +95,14 @@ export default function JoinClassroom({ role }: { role: string }) {
                     <Button
                         type='submit'
                         className='rounded bg-blue-500 py-2 font-semibold text-white transition duration-200 hover:bg-blue-600'
-                        onClick={joinClass}
+                        onClick= {()=>{
+                            joinClass();
+                            // inClassAlready();
+                        }}
                     >
                         Join
                     </Button>
+                    
                 </DialogFooter>
             </DialogContent>
         </Dialog>

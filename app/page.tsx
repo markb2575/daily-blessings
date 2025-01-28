@@ -5,6 +5,7 @@ import { authClient } from '@/lib/auth-client'
 import { redirect } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Plus, LogOut, Settings, User, LogIn } from 'lucide-react'
+import { ToastProvider } from '@radix-ui/react-toast'
 import {
     Dialog,
     DialogClose,
@@ -83,72 +84,72 @@ export default function Home() {
     if (role !== 'none') {
         return (
             <div className='font-Open_Sans min-h-screen flex justify-center'>
-                <Navbar
-                    left={
-                        <div className='flex items-center gap-4'>
-                            <div className='size-8 rounded-md bg-gray-200' />
-                            <div className='cursor-default text-xl font-medium'>
-                                Daily Blessings
+              
+                    <Navbar
+                        left={
+                            <div className='flex items-center gap-4'>
+                                <div className='size-8 rounded-md bg-gray-200' />
+                                <div className='cursor-default text-xl font-medium'>
+                                    Daily Blessings
+                                </div>
                             </div>
+                        }
+                        right={
+                            <div className='flex items-center gap-4'>
+                                {/* <button className='hover:scale-200 rounded bg-yellow-200 px-2 py-2 text-[15px] font-semibold text-yellow-500 transition duration-200 hover:-translate-y-1 hover:bg-yellow-500 hover:text-white'>
+                                    Blessings Shop
+                                </button> */}
+
+                                {role === "teacher"?<CreateClassroom/>: null}
+                                <JoinClassroom role={role}/>
+                         
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Avatar className='size-11 cursor-pointer items-center justify-center border-2 border-white bg-gray-100 transition ease-in hover:border-gray-200'>
+                                            <AvatarImage
+                                                src={
+                                                    session.data?.user.image
+                                                        ? session.data?.user.image
+                                                        : undefined
+                                                }
+                                            />
+                                            <User />
+                                        </Avatar>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent className='absolute -right-5 -top-1 w-40 bg-white font-Open_Sans font-medium'>
+                                        <DropdownMenuLabel>
+                                            {session.data?.user.name}
+                                        </DropdownMenuLabel>
+                                        <DropdownMenuSeparator className='bg-gray-200' />
+                                        <DropdownMenuGroup>
+                                            <DropdownMenuItem className='cursor-pointer focus:bg-gray-100'>
+                                                <Settings />
+                                                <span>Settings</span>
+                                            </DropdownMenuItem>
+                                        </DropdownMenuGroup>
+                                        <DropdownMenuSeparator className='bg-gray-200' />
+                                        <DropdownMenuGroup>
+                                            <DropdownMenuItem
+                                                onClick={handleSignOut}
+                                                className='cursor-pointer focus:bg-gray-100 focus:text-red-500'
+                                            >
+                                                <LogOut />
+                                                <span>Sign out</span>
+                                            </DropdownMenuItem>
+                                        </DropdownMenuGroup>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </div>
+                        }
+                    />
+
+                    <div className= 'mt-24 mx-10'>
+                        <div className='cursor-default space-y-20 mb-8 text-2xl font-semibold'>
+                            Welcome, {session.data?.user.name}! You are a {role}
                         </div>
-                    }
-                    right={
-                        <div className='flex items-center gap-4'>
-                            {/* <button className='hover:scale-200 rounded bg-yellow-200 px-2 py-2 text-[15px] font-semibold text-yellow-500 transition duration-200 hover:-translate-y-1 hover:bg-yellow-500 hover:text-white'>
-                                Blessings Shop
-                            </button> */}
-
-                            {role === "teacher"?<CreateClassroom/>: null}
-
-                            <JoinClassroom role={role}/>
-
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Avatar className='size-11 cursor-pointer items-center justify-center border-2 border-white bg-gray-100 transition ease-in hover:border-gray-200'>
-                                        <AvatarImage
-                                            src={
-                                                session.data?.user.image
-                                                    ? session.data?.user.image
-                                                    : undefined
-                                            }
-                                        />
-                                        <User />
-                                    </Avatar>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent className='absolute -right-5 -top-1 w-40 bg-white font-Open_Sans font-medium'>
-                                    <DropdownMenuLabel>
-                                        {session.data?.user.name}
-                                    </DropdownMenuLabel>
-                                    <DropdownMenuSeparator className='bg-gray-200' />
-                                    <DropdownMenuGroup>
-                                        <DropdownMenuItem className='cursor-pointer focus:bg-gray-100'>
-                                            <Settings />
-                                            <span>Settings</span>
-                                        </DropdownMenuItem>
-                                    </DropdownMenuGroup>
-                                    <DropdownMenuSeparator className='bg-gray-200' />
-                                    <DropdownMenuGroup>
-                                        <DropdownMenuItem
-                                            onClick={handleSignOut}
-                                            className='cursor-pointer focus:bg-gray-100 focus:text-red-500'
-                                        >
-                                            <LogOut />
-                                            <span>Sign out</span>
-                                        </DropdownMenuItem>
-                                    </DropdownMenuGroup>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </div>
-                    }
-                />
-
-                <div className= 'mt-24 mx-10'>
-                    <div className='cursor-default space-y-20 mb-8 text-2xl font-semibold'>
-                        Welcome, {session.data?.user.name}! You are a {role}
-                    </div>
-                    <ClassTable/>
+                        <ClassTable/>
                 </div>    
-                    
+            
                     
                    
 

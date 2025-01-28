@@ -26,11 +26,20 @@ export async function POST(req: Request) {
         //user is a student 
         console.log("InStudentCode") 
         const result = await db.select({classroomId: classroom.classroomId }).from(classroom).where(eq(classroom.studentCode,studentCode));
+        if(result.length === 0){
+            return Response.json({
+                success: false,
+                message: "Classroom not found"
+            })
+        }
         await db.insert(classroom_member).values({classroomId: result[0].classroomId, userId: userId})
+        
+        //error when you are already in the class
         const isInClass = await db.select({userId: classroom_member.userId }).from(classroom_member).where(and(eq(classroom_member.classroomId,result[0].classroomId),eq(classroom_member.userId,userId)));
         if(isInClass.length > 0){
             return Response.json({
-                'success':false
+                success: false,
+                message: "Student is already in this class"
             });
         }
         console.log(result)
@@ -38,10 +47,13 @@ export async function POST(req: Request) {
         //user is a teacher
         console.log("InTeacherCode") 
         const result = await db.select({classroomId: classroom.classroomId }).from(classroom).where(eq(classroom.teacherCode,teacherCode));
+
+        //error for when you are already in the class
         const isInClass = await db.select({userId: classroom_member.userId }).from(classroom_member).where(and(eq(classroom_member.classroomId,result[0].classroomId),eq(classroom_member.userId,userId)));
         if(isInClass.length > 0){
             return Response.json({
-                'success':false
+                success: false,
+                message: "Teacher is already in this class"
             });
         }
         console.log("isInClass: ",isInClass)
