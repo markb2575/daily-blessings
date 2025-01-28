@@ -98,11 +98,15 @@ export default function Home() {
                                 Blessings Shop
                             </button> */}
 
+<<<<<<< Updated upstream
                             <CreateClassroom
                                 userId={session.data?.session.userId}
                             />
+=======
+                            {role === "teacher"?<CreateClassroom/>: null}
+>>>>>>> Stashed changes
 
-                            <JoinClassroom />
+                            <JoinClassroom role={role}/>
 
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { TabsContent } from '../ui/tabs'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
+import { authClient } from '@/lib/auth-client'
 import {
     Dialog,
     DialogHeader,
@@ -25,27 +26,28 @@ import {
 import { toast } from 'sonner'
 import { Copy, Plus } from 'lucide-react'
 
-export default function CreateClassroom(userId: any) {
+export default function CreateClassroom() {
     const [codes, setCodes] = useState<any>(null)
     const [curriculums, setCurriculums] = useState([])
     const [curriculumId, setCurriculumId] = useState('')
     const [classroomName, setClassroomName] = useState('')
+    const session = authClient.useSession()
     const resetForm = () => {
         setCodes(null)
         setCurriculumId('')
         setClassroomName('')
     }
-    const createClassroom = () => {
+    const createClassroom = async() => {
         if (curriculumId === '' || classroomName === '') {
             toast.error('Please fill in all fields.')
             return
         }
-        fetch('/api/classroom', {
+        await fetch('/api/classroom', {
             method: 'POST',
             body: JSON.stringify({
                 curriculumId: curriculumId || '',
                 classroomName: classroomName || '',
-                userId: userId || ''
+                userId: session.data?.session.userId || ''
             })
         })
             .then(response => {

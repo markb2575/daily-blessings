@@ -10,7 +10,8 @@ export async function POST(req: Request) {
 
     const curriculumId = data.curriculumId
     const classroomName = data.classroomName
-    const userId = data.userId.userId
+    const userId = data.userId
+
 
     if (curriculumId == null || classroomName == null) {
         return Response.json({
@@ -21,7 +22,7 @@ export async function POST(req: Request) {
     const teacherCode = generateCode(7)
     const result = await db.insert(classroom).values({curriculumId: Number(curriculumId), classroomName: classroomName, studentCode: studentCode, teacherCode: teacherCode}).$returningId();
     const classroomId = result[0].classroomId
-    // console.log(classroomId, userId.userId)
+    console.log(classroomId, userId)
     await db.insert(classroom_member).values({classroomId: classroomId, userId: userId})
 
     return Response.json({
