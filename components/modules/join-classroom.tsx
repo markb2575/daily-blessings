@@ -28,7 +28,6 @@ import { classroom } from '@/lib/db/schema'
 export default function JoinClassroom({ role }: { role: string }) {
     // const [curriculums, setCurriculums] = useState([])
     // const [curriculumId, setCurriculumId] = useState('')
-    const [JoinClass, setJoinClass] = useState('') //I think this is usless and makes no sense because you not putting this into the api you just fetching it so you dont need to store it right?
     const [code, setCode] = useState('')
     const session = authClient.useSession()
     
@@ -55,8 +54,7 @@ export default function JoinClassroom({ role }: { role: string }) {
             })
             
             .then(data => {
-                console.log(data.JoinClass, 'studentCode');
-                setJoinClass(data.JoinClass);
+ 
             })
     }
     

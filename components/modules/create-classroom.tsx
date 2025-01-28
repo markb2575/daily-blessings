@@ -37,7 +37,7 @@ export default function CreateClassroom() {
         setCurriculumId('')
         setClassroomName('')
     }
-    const createClassroom = async() => {
+    const createClassroom = async () => {
         if (curriculumId === '' || classroomName === '') {
             toast.error('Please fill in all fields.')
             return
@@ -63,17 +63,15 @@ export default function CreateClassroom() {
     const getCurriculums = async () => {
         await fetch('/api/curriculum/list', {
             method: 'GET'
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok')
+            }
+            return response.json()
+        }).then(data => {
+            console.log(data.curriculums, 'curriculums')
+            setCurriculums(data.curriculums)
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok')
-                }
-                return response.json()
-            })
-            .then(data => {
-                console.log(data.curriculums, 'curriculums')
-                setCurriculums(data.curriculums)
-            })
     }
 
     useEffect(() => {
