@@ -5,7 +5,6 @@ import { authClient } from '@/lib/auth-client'
 import { redirect } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Plus, LogOut, Settings, User, LogIn } from 'lucide-react'
-import { ToastProvider } from '@radix-ui/react-toast'
 import {
     Dialog,
     DialogClose,

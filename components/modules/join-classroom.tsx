@@ -60,10 +60,6 @@ export default function JoinClassroom({ role }: { role: string }) {
                 }
                 return response
             })
-            
-            .then(data => {
- 
-            })
     }
     
     return (
