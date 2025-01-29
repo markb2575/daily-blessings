@@ -82,7 +82,7 @@ export default function Home() {
 
     if (role !== 'none') {
         return (
-            <div className='font-Open_Sans min-h-screen flex justify-center'>
+            <div className='font-Open_Sans min-h-screen flex'>
               
                     <Navbar
                         left={
@@ -146,7 +146,7 @@ export default function Home() {
                         <div className='cursor-default space-y-20 mb-8 text-2xl font-semibold'>
                             Welcome, {session.data?.user.name}! You are a {role}
                         </div>
-                        <ClassTable/>
+                        <ClassTable role = {role}/>
                 </div>    
             
                     

@@ -1,63 +1,72 @@
-import { Button } from '@/components/ui/button'
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle
-} from '@/components/ui/card'
-import { Settings2 , EllipsisVertical } from 'lucide-react'
+'use client'
 
+import { Card, CardHeader, CardTitle } from '@/components/ui/card'
+import { Settings2 } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { authClient } from '@/lib/auth-client'
 
-export function ClassTable() {
-const classes = [{"classroomName": "5th Grade"}, {"classroomName": "5th Grade"}, {"classroomName": "4th Grade"}, {"classroomName": "3th Grade"}, {"classroomName": "2th Grade"}]
+export function ClassTable({ role }: { role: string }) {
+    const [classes, setClasses] = useState<{ classroomName: string }[]>([])
+    const [isLoading, setIsLoading] = useState(true)
+    const session = authClient.useSession()
+
+    useEffect(() => {
+        const fetchClasses = async () => {
+            try {
+                const response = await fetch('/api/classroom', {
+                    method: 'GET',
+                    headers: {
+                        userId: session.data?.session.userId || ''
+                    }
+                })
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok')
+                }
+                
+                const data = await response.json()
+                setClasses(data.classrooms)
+                setIsLoading(false)
+            } catch (error) {
+                console.error('Error fetching classes:', error)
+                setIsLoading(false)
+            }
+        }
+
+        if (session.data?.session.userId) {
+            fetchClasses()
+        }
+    }, [session.data?.session.userId])
+
+    if (isLoading) {
+        return <div>Loading classes...</div>
+    }
+
+    if (classes.length === 0) {
+        return <div>No classes found.</div>
+    }
 
     return (
-        <div className='flex flex-wrap gap-8 justify-items-start align-top'>
-        
-        {classes.map((value: any, index)=>(
-            <Card key={index} className='overflow-hidden transition-all hover:shadow-lg size-72'>
-                <CardHeader className='flex flex-row justify-between items-center bg-blue-300'>
-                <CardTitle className='line-clamp-1'>{value.classroomName}</CardTitle>
-                <div className='flex items-center justify-between'>  
-                        <Settings2 size={30}/> 
-                </div>
-            </CardHeader>
-               
-            </Card>
-            
-        ))}
-        
+        <div className='flex flex-wrap justify-items-start gap-8 align-top'>
+            {classes.map((value, index) => (
+                <Card
+                    key={index}
+                    className='bg-gray-100 h-40 w-64 overflow-hidden  hover:border-gray-200 hover:border-2 hover:shadow-lg'
+                >
+                    <CardHeader className='pt-2 pl-2 flex-row justify-between items-center bg-gradient-to-r from-blue-500 to-blue-400'>
+                    
+                        <CardTitle className='text-white'>
+                            {value.classroomName}
+                        </CardTitle>
+                        <div className='flex items-center justify-between'>
+                            <Settings2 className="cursor-pointer text-white hover:text-gray-300" size={25} />
+                        </div>
+                    </CardHeader>
+                    
+                </Card>
+            ))}
         </div>
     )
 }
 
 
-{/* <div className='relative h-48 w-full'>
-                <img
-                    alt={title}
-                    className='h-full w-full object-cover'
-                />
-            </div>
-            <CardHeader>
-                <div className='flex items-center justify-between'>
-                    <div className='flex items-center gap-2 text-sm text-muted-foreground'>
-                        <Users className='h-4 w-4' />
-                        
-                    </div>
-                </div>
-                <CardTitle className='line-clamp-1'>{title}</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <p className='line-clamp-2 text-sm text-muted-foreground'>
-                    {description}
-                </p>
-            </CardContent>
-            <CardFooter className='flex justify-between'>
-                <Button variant='outline' size='sm'>
-                    <BookOpen className='mr-2 h-4 w-4' />
-                    Edit
-                </Button>
-                <Button size='sm'>Enter</Button>
-            </CardFooter> */}
