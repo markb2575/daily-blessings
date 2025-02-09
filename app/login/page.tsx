@@ -8,7 +8,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import Link from 'next/link'
 import { authClient } from "@/lib/auth-client";
-import { redirect } from 'next/navigation'
 import { toast } from 'sonner';
 
 export default function Login() {

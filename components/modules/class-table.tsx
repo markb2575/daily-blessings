@@ -4,11 +4,12 @@ import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 import { Settings2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { authClient } from '@/lib/auth-client'
-import { redirect } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
 export function ClassTable({ role, isLoading, setIsLoading }: { role: string, isLoading: boolean, setIsLoading: Function }) {
     const [classes, setClasses] = useState<{ classroomName: string, classroomId: string }[]>([])
     const session = authClient.useSession()
+    const router = useRouter();
 
     useEffect(() => {
         const fetchClasses = async () => {
@@ -48,7 +49,7 @@ export function ClassTable({ role, isLoading, setIsLoading }: { role: string, is
                 <Card
                     key={index}
                     className='bg-gray-100 h-40 w-64 overflow-hidden  hover:border-gray-200 hover:border-2 hover:shadow-lg'
-                    onClick={() => redirect("/classroom/"+value.classroomId)}
+                    onClick={() => router.push("/classroom/"+value.classroomId)}
                 >
                     <CardHeader className='pt-2 pl-2 flex-row justify-between items-center bg-gradient-to-r from-blue-500 to-blue-400'>
                     
