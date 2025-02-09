@@ -11,12 +11,14 @@ import { toast } from 'sonner'
 import { Label } from "@/components/ui/label";
 
 export default function Signup() {
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false)
-    const [confirmedPassword, setConfirmedPassword] = useState("")
+    const [form, setForm] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        confirmedPassword: ""
+    })
 
     const handleGoogleSignup = async () => {
         await authClient.signIn.social({
@@ -32,23 +34,23 @@ export default function Signup() {
                 toast.error(ctx.error.message)
             }
         })
-    
     }
 
     const handleEmailSignup = async (event: React.FormEvent) => {
         event.preventDefault();
-        if (!email || !password || !firstName || !lastName) {
+        console.log(form.email)
+        if (form.email === "" || form.password === "" || form.firstName === "" || form.lastName === "" || form.confirmedPassword === "") {
             toast.error("Please fill in all fields.")
             return;
         }
-        if (confirmedPassword != password) {
+        if (form.confirmedPassword != form.password) {
             toast.error("Passwords don't match.")
             return;
         }
         const { data, error } = await authClient.signUp.email({
-            'email': email,
-            'password': password,
-            'name': `${firstName} ${lastName}`
+            'email': form.email,
+            'password': form.password,
+            'name': `${form.firstName} ${form.lastName}`
         }, {
             onRequest: (ctx) => {
                 setLoading(true)
@@ -63,6 +65,12 @@ export default function Signup() {
         });
     };
 
+    const handleChange = (e: any) => {
+        setForm({
+            ...form,
+            [e.target.id]: e.target.value
+        })
+    }
     return (
         <div className="font-Open_Sans min-h-screen flex items-center justify-center place-items-center h-screen flex-col w-screen">
             <div className="w-[350px]">
@@ -105,29 +113,23 @@ export default function Signup() {
                 <form onSubmit={handleEmailSignup} className="flex flex-col">
                 <div className="grid grid-cols-2 gap-4">
 						<div className="grid">
-							<Label htmlFor="first-name" className="text-neutral-700 mb-2">First name</Label>
+							<Label htmlFor="firstName" className="text-neutral-700 mb-2">First name</Label>
 							<Input
                                 className="border-neutral-400 text-neutral-700 mb-4 bg-white"
-								id="first-name"
+								id="firstName"
 								placeholder="John"
 								required
-								onChange={(e) => {
-									setFirstName(e.target.value);
-								}}
-								value={firstName}
+								onChange={handleChange}
 							/>
 						</div>
 						<div className="grid">
-							<Label htmlFor="last-name" className="text-neutral-700 mb-2">Last name</Label>
+							<Label htmlFor="lastName" className="text-neutral-700 mb-2">Last name</Label>
 							<Input
                                 className="border-neutral-400 text-neutral-700 mb-4 bg-white"
-								id="last-name"
+								id="lastName"
 								placeholder="Doe"
 								required
-								onChange={(e) => {
-									setLastName(e.target.value);
-								}}
-								value={lastName}
+								onChange={handleChange}
 							/>
 						</div>
 					</div>
@@ -136,8 +138,8 @@ export default function Signup() {
                         id="email"
                         placeholder="user@example.com"
                         className="border-neutral-400 text-neutral-700 mb-4 bg-white"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        onChange={handleChange}
                     />
                     <Label htmlFor="password" className="text-neutral-700 mb-2">Password</Label>
                     <Input
@@ -145,17 +147,17 @@ export default function Signup() {
                         type="password"
                         placeholder="password"
                         className="border-neutral-400 text-neutral-700 mb-4 bg-white"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        onChange={handleChange}
                     />
-                    <Label htmlFor="confirm password" className="text-neutral-700 mb-2">Confirm Password</Label>
+                    <Label htmlFor="confirmedPassword" className="text-neutral-700 mb-2">Confirm Password</Label>
                     <Input
-                        id="confirm password"
+                        id="confirmedPassword"
                         type="password"
                         placeholder="confirm password"
                         className="border-neutral-400 text-neutral-700 mb-4 bg-white"
-                        value={confirmedPassword}
-                        onChange={(e) => setConfirmedPassword(e.target.value)}
+                        required
+                        onChange={handleChange}
                     />
                     <Button
                         type="submit"

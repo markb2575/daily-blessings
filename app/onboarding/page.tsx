@@ -60,24 +60,24 @@ export default function Login() {
                     <Label className="text-gray-700 mb-4 text-lg">I am a...</Label>
                     <div className="flex-col flex gap-4">
                         <Button
-                            className={`[&_svg]:size-5 mx2 w-full h-14 font-bold justify-start border-2 border-gray-400 bg-white  ${role === "teacher" ? " border-blue-400 " : " border-0"}`}
+                            className={`[&_svg]:size-5 mx2 w-full h-14 font-bold hover:bg-gray-200 justify-start border-2 border-gray-400 bg-white  ${role === "teacher" ? " border-blue-400 " : " border-0"}`}
                             onClick={() => {
                                 setRole("teacher")
                             }}
                         >
                             <div>
-                                <div className="flex flex-row text-base gap-2"><LucideSchool />Teacher</div>
+                                <div className="flex flex-row text-base gap-2 text-gray-700"><LucideSchool />Teacher</div>
                                 <div className="text-gray-700 text-xs">Teacher can create classes</div>
                             </div>
                         </Button>
                         <Button
-                            className={`[&_svg]:size-5 mx2 w-full h-14 font-bold justify-start border-2 border-gray-400 bg-white  ${role === "student" ? " border-blue-400 " : " border-0"}`}
+                            className={`[&_svg]:size-5 mx2 w-full h-14 font-bold hover:bg-gray-200 justify-start border-2 border-gray-400 bg-white  ${role === "student" ? " border-blue-400 " : " border-0"}`}
                             onClick={() => {
                                 setRole("student")
                             }}
                         >
                             <div>
-                                <div className="flex flex-row text-base gap-2"><LucideGraduationCap />Student</div>
+                                <div className="flex flex-row text-base gap-2 text-gray-700"><LucideGraduationCap />Student</div>
                                 <div className="text-gray-700 text-xs">Students can join classes with a code</div>
                             </div>
                         </Button>

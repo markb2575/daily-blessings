@@ -11,10 +11,13 @@ import { authClient } from "@/lib/auth-client";
 import { toast } from 'sonner';
 
 export default function Login() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false)
-    const [rememberMe, setRememberMe] = useState(false);
+
+    const [form, setForm] = useState({
+        email: "",
+        password: "",
+        rememberMe: false,
+    })
 
     const handleGoogleLogin = async () => {
         await authClient.signIn.social({
@@ -34,14 +37,14 @@ export default function Login() {
 
     const handleEmailLogin = async (event: React.FormEvent) => {
         event.preventDefault();
-        if (!email || !password) {
+        if (form.email === "" || form.password === "") {
             toast.error("Please fill in all fields.")
             return;
         }
         await authClient.signIn.email({
-            'email': email,
-            'password': password,
-            'rememberMe': rememberMe,
+            'email': form.email,
+            'password': form.password,
+            'rememberMe': form.rememberMe,
             'callbackURL': '/'
         }, {
             onRequest: () => {
@@ -53,7 +56,12 @@ export default function Login() {
             }
         })
     };
-
+    const handleChange = (e: any) => {
+        setForm({
+            ...form,
+            [e.target.id]: e.target.value
+        })
+    }
     return (
         <div className="font-Open_Sans min-h-screen flex items-center justify-center place-items-center h-screen flex-col w-screen">
             <div className="w-[350px]">
@@ -99,8 +107,7 @@ export default function Login() {
                         id="email"
                         placeholder="user@example.com"
                         className="border-gray-400 text-gray-700 mb-4 bg-white"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={handleChange}
                     />
                     <Label className="text-gray-700 mb-2"  htmlFor="password">Password</Label>
                     <Input
@@ -108,18 +115,15 @@ export default function Login() {
                         type="password"
                         placeholder="password"
                         className="border-gray-400 text-gray-700 mb-4 bg-white"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={handleChange}
                     />
                     <div className="flex items-center gap-2 mb-4">
                         <Checkbox
-                            id="remember"
+                            id="rememberMe"
                             className="border-gray-400 bg-white"
-                            onClick={() => {
-                                setRememberMe(!rememberMe);
-                            }}
+                            onClick={handleChange}
                         />
-                        <Label className="text-gray-700"  htmlFor="remember">Remember me</Label>
+                        <Label className="text-gray-700"  htmlFor="rememberMe">Remember me</Label>
                     </div>
                     <Button
                         type="submit"
