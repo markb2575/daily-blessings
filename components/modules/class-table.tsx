@@ -6,9 +6,8 @@ import { useEffect, useState } from 'react'
 import { authClient } from '@/lib/auth-client'
 import { redirect } from 'next/navigation'
 
-export function ClassTable({ role }: { role: string }) {
+export function ClassTable({ role, isLoading, setIsLoading }: { role: string, isLoading: boolean, setIsLoading: Function }) {
     const [classes, setClasses] = useState<{ classroomName: string, classroomId: string }[]>([])
-    const [isLoading, setIsLoading] = useState(true)
     const session = authClient.useSession()
 
     useEffect(() => {
@@ -37,11 +36,7 @@ export function ClassTable({ role }: { role: string }) {
         if (session.data?.session.userId) {
             fetchClasses()
         }
-    }, [session.data?.session.userId])
-
-    if (isLoading) {
-        return <div>Loading classes...</div>
-    }
+    }, [session.data?.session.userId, isLoading])
 
     if (classes.length === 0) {
         return <div>No classes found.</div>

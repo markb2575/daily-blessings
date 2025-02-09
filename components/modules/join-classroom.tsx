@@ -26,12 +26,9 @@ import {
 } from '../ui/select'
 import { classroom } from '@/lib/db/schema'
 
-export default function JoinClassroom({ role }: { role: string }) {
-    const [JoinClass, setJoinClass] = useState('') //I think this is usless and makes no sense because you not putting this into the api you just fetching it so you dont need to store it right?
+export default function JoinClassroom({ role, refreshClasses }: { role: string, refreshClasses: Function }) {
     const [code, setCode] = useState('')
     const session = authClient.useSession()
-
-    
     
     const resetForm = () => {
         setCode('')
@@ -56,7 +53,9 @@ export default function JoinClassroom({ role }: { role: string }) {
                 if (!response.ok) {
                     toast.error("Unable to join class")
                 }
+                refreshClasses()
                 return response
+                
             })
     }
     

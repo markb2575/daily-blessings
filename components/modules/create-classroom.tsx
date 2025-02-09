@@ -26,7 +26,7 @@ import {
 import { toast } from 'sonner'
 import { Copy, Plus } from 'lucide-react'
 
-export default function CreateClassroom() {
+export default function CreateClassroom({ refreshClasses }: { refreshClasses: Function }) {
     const [codes, setCodes] = useState<any>(null)
     const [curriculums, setCurriculums] = useState([])
     const [curriculumId, setCurriculumId] = useState('')
@@ -58,6 +58,7 @@ export default function CreateClassroom() {
             })
             .then(data => {
                 setCodes(data)
+                refreshClasses()
             })
     }
     const getCurriculums = async () => {

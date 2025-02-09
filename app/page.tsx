@@ -79,6 +79,11 @@ export default function Home() {
             })
     }
 
+    const [isLoading, setIsLoading] = useState(true)
+    const refreshClasses = () => {
+        setIsLoading(prev => !prev); // Toggle state to trigger useEffect
+    };
+
     if (role !== 'none') {
         return (
             <div className='flex min-h-screen font-Open_Sans'>
@@ -97,8 +102,8 @@ export default function Home() {
                                     Blessings Shop
                                 </button> */}
 
-                            {role === 'teacher' ? <CreateClassroom /> : null}
-                            <JoinClassroom role={role} />
+                            {role === 'teacher' ? <CreateClassroom refreshClasses={refreshClasses} /> : null}
+                            <JoinClassroom role={role} refreshClasses={refreshClasses} />
 
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
@@ -144,7 +149,7 @@ export default function Home() {
                     <div className='mb-8 cursor-default space-y-20 text-2xl font-semibold'>
                         Welcome, {session.data?.user.name}! You are a {role}
                     </div>
-                    <ClassTable role={role} />
+                    <ClassTable role={role} isLoading={isLoading} setIsLoading={setIsLoading}/>
                 </div>
             </div>
         )
