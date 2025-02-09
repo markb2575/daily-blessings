@@ -4,16 +4,17 @@ import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 import { Settings2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { authClient } from '@/lib/auth-client'
+import { redirect } from 'next/navigation'
 
 export function ClassTable({ role }: { role: string }) {
-    const [classes, setClasses] = useState<{ classroomName: string }[]>([])
+    const [classes, setClasses] = useState<{ classroomName: string, classroomId: string }[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const session = authClient.useSession()
 
     useEffect(() => {
         const fetchClasses = async () => {
             try {
-                const response = await fetch('/api/classroom', {
+                const response = await fetch('/api/classroom/list', {
                     method: 'GET',
                     headers: {
                         userId: session.data?.session.userId || ''
@@ -52,6 +53,7 @@ export function ClassTable({ role }: { role: string }) {
                 <Card
                     key={index}
                     className='bg-gray-100 h-40 w-64 overflow-hidden  hover:border-gray-200 hover:border-2 hover:shadow-lg'
+                    onClick={() => redirect("/classroom/"+value.classroomId)}
                 >
                     <CardHeader className='pt-2 pl-2 flex-row justify-between items-center bg-gradient-to-r from-blue-500 to-blue-400'>
                     

@@ -69,7 +69,6 @@ export default function CreateClassroom() {
             }
             return response.json()
         }).then(data => {
-            console.log(data.curriculums, 'curriculums')
             setCurriculums(data.curriculums)
         })
     }

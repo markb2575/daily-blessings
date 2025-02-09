@@ -39,8 +39,6 @@ export default function JoinClassroom({ role }: { role: string }) {
     
     
     const joinClass = async () =>{
-        console.log("studentCode from class",code);
-        console.log("DataId From class",session.data?.session.userId );
 
         if (code === '') {
             toast.error("Text not input ")

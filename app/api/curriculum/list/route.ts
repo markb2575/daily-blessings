@@ -7,7 +7,6 @@ import { request } from 'http';
 
 export async function GET(req: Request) {
     const curriculums = await db.select().from(curriculum);
-    console.log("curriculums: ", curriculums);
     return Response.json({
        curriculums: curriculums
     });

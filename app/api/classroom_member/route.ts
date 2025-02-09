@@ -11,26 +11,22 @@ export async function POST(req: Request) {
     const studentCode = data.studentCode
     const teacherCode = data.teacherCode
 
-    console.log('User Id: ', userId, 'Student Code: ', studentCode)
-
-    console.log('Codes: ', studentCode, teacherCode)
-
     if (userId == '') {
-        return Response.json({ status: 404 })
+        return Response.json({ error: "Incorrect Headers" }, { status:400 });
     }
 
     if (studentCode !== undefined) {
         //user is a student
-        console.log('InStudentCode')
         const result = await db
             .select({ classroomId: classroom.classroomId })
             .from(classroom)
             .where(eq(classroom.studentCode, studentCode))
-            console.log(result.length === 0, "aaa")
         if (result.length === 0) {
-            return Response.json({ error: 'No class was found' }, { status: 404 });
+            return Response.json(
+                { error: 'No class was found' },
+                { status: 404 }
+            )
         }
-        
 
         //error when you are already in the class
         const isInClass = await db
@@ -42,16 +38,20 @@ export async function POST(req: Request) {
                     eq(classroom_member.userId, userId)
                 )
             )
-        console.log(isInClass, "isInClass")
         if (isInClass.length > 0) {
-
-            return Response.json({ error: 'Student is already in this class' }, { status: 404 })
+            return Response.json(
+                { error: 'Student is already in this class' },
+                { status: 404 }
+            )
         }
-        await db.insert(classroom_member).values({ classroomId: result[0].classroomId, userId: userId })
-        console.log(result)
+        await db
+            .insert(classroom_member)
+            .values({ classroomId: result[0].classroomId, userId: userId })
+        return Response.json(
+            { status: 200 }
+        )
     } else if (teacherCode !== undefined) {
         //user is a teacher
-        console.log('InTeacherCode')
         const result = await db
             .select({ classroomId: classroom.classroomId })
             .from(classroom)
@@ -68,26 +68,44 @@ export async function POST(req: Request) {
                 )
             )
         if (isInClass.length > 0) {
-            return Response.json({ error: 'Teacher is already in this class' }, { status: 404 })
+            return Response.json(
+                { error: 'Teacher is already in this class' },
+                { status: 404 }
+            )
         }
-        console.log('isInClass: ', isInClass)
-        await db.insert(classroom_member).values({ classroomId: result[0].classroomId, userId: userId })
-        console.log(result)
+        await db
+            .insert(classroom_member)
+            .values({ classroomId: result[0].classroomId, userId: userId })
+        return Response.json(
+            { status: 200 }
+        )
     }
-    // const result = await db.select({ role: user.role }).from(user).where(eq(user.id, userId));
-    // console.log("User Role: ", result[0].role)
-    // const role = result[0].role
 
-    // if(role === "teacher"){
+    return Response.json({ error: "Could not insert to classroom" }, { status:400 });
+}
 
-    // }else if (role === "student"){
+export async function GET(req: Request) {
+    const classroomId = req.headers.get('classroomId')
+    const userId = req.headers.get('userId')
 
-    // }
+    if (classroomId === null || userId === null) {
+        return Response.json({ error: "Incorrect Headers" });
+    }
 
-    // const result = await db.insert(classroom).values({curriculumId: Number(curriculumId), classroomName: classroomName, studentCode: studentCode, teacherCode: teacherCode}).$returningId();
-    // const classroomId = result[0].classroomId
-    // console.log(classroomId, userId.userId)
-    // await db.insert(classroom_member).values({classroomId: classroomId, userId: userId})
-
-    return Response.json({ status: 404 })
+    const classroom = await db
+        .select()
+        .from(classroom_member)
+        .where(
+            and(
+                eq(classroom_member.userId, userId),
+                eq(classroom_member.classroomId, Number(classroomId))
+            )
+        )
+    if (classroom.length === 0) {
+        console.log("not in class")
+        return Response.json({ error: "Not Found"}, { status:404 });
+    }
+    return Response.json(
+        { status: 200 }
+    )
 }

@@ -4,7 +4,7 @@ import { db } from '@/lib/db'
 import { sql } from 'drizzle-orm'
 
 
-export async function GET(req: Request) {
+// export async function GET(req: Request) {
     // Get the timezone from request headers or default to 'UTC'
     // const timeZone = req.headers.get('timezone') || 'UTC';
 
@@ -22,7 +22,6 @@ export async function GET(req: Request) {
 
     // const data = await db.select().from(questions).where(sql`${questions.date} = ${today}`);
 
-    // // console.log(data)
     // return Response.json({
     //     'questions': data.map((v,i) => (
     //         {
@@ -31,4 +30,4 @@ export async function GET(req: Request) {
     //         }
     //     )),
     // });
-}
+// }

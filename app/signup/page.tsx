@@ -42,7 +42,6 @@ export default function Signup() {
             return;
         }
         if (confirmedPassword != password) {
-            console.log(confirmedPassword, password)
             toast.error("Passwords don't match.")
             return;
         }
@@ -59,7 +58,6 @@ export default function Signup() {
             },
             onError: (ctx) => {
                 setLoading(false)
-                console.log("toast error")
                 toast.error(ctx.error.message)
             },
         });

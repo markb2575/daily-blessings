@@ -31,7 +31,6 @@ export default function Login() {
             }
             return response.json();
         }).then(data => {
-            console.log(data.role)
             if (data.role != "none") {
                 redirect("/");
             }
@@ -64,7 +63,6 @@ export default function Login() {
                             className={`[&_svg]:size-5 mx2 w-full h-14 font-bold justify-start border-2 border-gray-400 bg-white  ${role === "teacher" ? " border-blue-400 " : " border-0"}`}
                             onClick={() => {
                                 setRole("teacher")
-                                console.log("setting teacher role");
                             }}
                         >
                             <div>
@@ -76,7 +74,6 @@ export default function Login() {
                             className={`[&_svg]:size-5 mx2 w-full h-14 font-bold justify-start border-2 border-gray-400 bg-white  ${role === "student" ? " border-blue-400 " : " border-0"}`}
                             onClick={() => {
                                 setRole("student")
-                                console.log("setting student role");
                             }}
                         >
                             <div>
