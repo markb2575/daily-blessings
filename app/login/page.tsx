@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -9,8 +9,15 @@ import { Label } from "@/components/ui/label";
 import Link from 'next/link'
 import { authClient } from "@/lib/auth-client";
 import { toast } from 'sonner';
+import { redirect } from "next/navigation";
 
 export default function Login() {
+    const session = authClient.useSession()
+    useEffect(() => {
+        if (session.data !== null) {
+            redirect("/")
+        }
+    }, [session])
     const [loading, setLoading] = useState(false)
 
     const [form, setForm] = useState({
