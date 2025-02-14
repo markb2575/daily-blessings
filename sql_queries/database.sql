@@ -6,7 +6,6 @@ DROP TABLE IF EXISTS `dailyblessings`.`classroom`;
 DROP TABLE IF EXISTS `dailyblessings`.`curriculum_questions`;
 DROP TABLE IF EXISTS `dailyblessings`.`curriculum_day`;
 DROP TABLE IF EXISTS `dailyblessings`.`curriculum`;
-DROP TABLE IF EXISTS `dailyblessings`.`day`;
 DROP TABLE IF EXISTS `dailyblessings`.`session`;
 DROP TABLE IF EXISTS `dailyblessings`.`user`;
 DROP TABLE IF EXISTS `dailyblessings`.`verification`;
@@ -42,6 +41,7 @@ CREATE TABLE `classroom` (
     `studentCode` varchar(7) NOT NULL,
     `teacherCode` varchar(7) NOT NULL,
     `classroomName` varchar(24) NOT NULL,
+    `dayIndex` int NOT NULL DEFAULT (0),
 	CONSTRAINT `classroom_classroomId` PRIMARY KEY(`classroomId`)
 );
 CREATE TABLE `classroom_member` (
@@ -56,26 +56,20 @@ CREATE TABLE `curriculum` (
 );
 CREATE TABLE `curriculum_day` (
 	`curriculumId` int NOT NULL,
-	`date` date NOT NULL,
+	`dayIndex` int NOT NULL,
 	`book` varchar(24),
 	`chapter` int,
 	`lowerVerse` int,
 	`upperVerse` int,
-	CONSTRAINT `curriculum_day_curriculumId_date_pk` PRIMARY KEY(`curriculumId`,`date`)
+	CONSTRAINT `curriculum_day_curriculumId_date_pk` PRIMARY KEY(`curriculumId`,`dayIndex`)
 );
 CREATE TABLE `curriculum_questions` (
 	`questionId` int AUTO_INCREMENT NOT NULL,
 	`isFillInTheBlank` boolean NOT NULL,
 	`question` text NOT NULL,
 	`curriculumId` int NOT NULL,
-	`date` date NOT NULL,
+    `dayIndex` int NOT NULL,
 	CONSTRAINT `curriculum_questions_questionId` PRIMARY KEY(`questionId`)
-);
-CREATE TABLE `day` (
-	`date` date NOT NULL,
-	`copticDate` varchar(36) NOT NULL,
-	`feast` text,
-	CONSTRAINT `day_date` PRIMARY KEY(`date`)
 );
 CREATE TABLE `session` (
 	`id` varchar(36) NOT NULL,
@@ -117,6 +111,5 @@ ALTER TABLE `classroom` ADD CONSTRAINT `classroom_curriculumId_curriculum_curric
 ALTER TABLE `classroom_member` ADD CONSTRAINT `classroom_member_classroomId_classroom_classroomId_fk` FOREIGN KEY (`classroomId`) REFERENCES `classroom`(`classroomId`) ON DELETE no action ON UPDATE no action;
 ALTER TABLE `classroom_member` ADD CONSTRAINT `classroom_member_userId_user_id_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE no action ON UPDATE no action;
 ALTER TABLE `curriculum_day` ADD CONSTRAINT `curriculum_day_curriculumId_curriculum_curriculumId_fk` FOREIGN KEY (`curriculumId`) REFERENCES `curriculum`(`curriculumId`) ON DELETE no action ON UPDATE no action;
-ALTER TABLE `curriculum_day` ADD CONSTRAINT `curriculum_day_date_day_date_fk` FOREIGN KEY (`date`) REFERENCES `day`(`date`) ON DELETE no action ON UPDATE no action;
-ALTER TABLE `curriculum_questions` ADD CONSTRAINT `curric_quest_curric_day_fk` FOREIGN KEY (`curriculumId`,`date`) REFERENCES `curriculum_day`(`curriculumId`,`date`) ON DELETE no action ON UPDATE no action;
+ALTER TABLE `curriculum_questions` ADD CONSTRAINT `curric_quest_curric_day_fk` FOREIGN KEY (`curriculumId`,`dayIndex`) REFERENCES `curriculum_day`(`curriculumId`,`dayIndex`) ON DELETE no action ON UPDATE no action;
 ALTER TABLE `session` ADD CONSTRAINT `session_userId_user_id_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE no action ON UPDATE no action;

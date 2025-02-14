@@ -12,12 +12,15 @@ import { redirect } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import React from 'react'
 import { useRouter } from 'next/navigation'
-import DateInfo from '@/components/modules/date-info'
+import { classroom } from '@/lib/db/schema'
 
-type DateInfoTypes = {
-    date: string,
-    copticDate: string,
-    feast: string
+type ClassroomData = {
+    classroomId: number,
+    curriculumId: number,
+    classroomName: string,
+    studentCode: string, 
+    teacherCode: string | '',
+    dayIndex: number
 } | null
  
 
@@ -26,41 +29,44 @@ export default function Classroom({
 }: {
     params: Promise<{ classroomId: string }>
 }) {
-    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    // const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const router = useRouter();
     const [role, setRole] = useState('none')
-    const [dateInfo, setDateInfo] = useState<DateInfoTypes>(null)
+    // const [dateInfo, setDateInfo] = useState<DateInfoTypes>(null)
+    const [classroomData, setClassroomData] = useState<ClassroomData>(null)
     const session = authClient.useSession()
+    const classroomId = React.use(params).classroomId
 
-    const checkRole = async () => {
+    const getClassroomData = async () => {
         const id = session.data?.session.userId
 
         if (id == undefined) return
-        await fetch('/api/user/role', {
+        if (classroomId == undefined) return
+        await fetch('/api/classroom', {
             method: 'GET',
             headers: {
+                classroomId: classroomId || '',
                 id: id || ''
             }
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok')
+            }
+            return response.json()
+        }).then(data => {
+            if (data.role === 'none') {
+                redirect('/onboarding')
+            }
+            setClassroomData(data.classroomData)
+            console.log(data)
+            setRole(data.role[0].role)
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok')
-                }
-                return response.json()
-            })
-            .then(data => {
-                if (data.role === 'none') {
-                    redirect('/onboarding')
-                }
-                setRole(data.role)
-            })
     }
 
     const handleSignOut = async () => {
         await authClient.signOut()
         redirect('/login')
     }
-    const classroomId = React.use(params).classroomId
     const [userInClass, setUserInClass] = useState(false)
     const checkUserInClass = async () => {
         const userId = session.data?.session.userId
@@ -80,31 +86,13 @@ export default function Classroom({
         })
     }
 
-    const getDateInfo = async () => {
-        await fetch('/api/day', {
-            headers: {
-                'timezone': userTimeZone,
-            }
-        }).then(response => {
-            if (!response.ok) {
-                console.log("ERROR: could not fetch date info")
-                return
-            }
-            return response.json()
-        }).then(data => {
-            console.log(data)
-            setDateInfo(data)
-        })
-    }
-
     useEffect(() => {
         if (!session.data) return
         checkUserInClass()
-        checkRole()
-        getDateInfo()
+        getClassroomData()
     }, [session.data])
-
-    if (userInClass === false || dateInfo === null) return null
+    console.log(role,"role")
+    if (userInClass === false || classroomData === null || role === 'none') return null
 
     return (
         <div className='flex min-h-screen font-Open_Sans'>
@@ -158,11 +146,11 @@ export default function Classroom({
 
             />
             <div className='mx-10 mt-24'>
-                {dateInfo && <DateInfo date={dateInfo.date} copticDate={dateInfo.copticDate} feast={dateInfo.feast}/>}
+                <div>The current day index is {classroomData.dayIndex}</div>
                 {role === "student" ? (
-                    <StudentView date={dateInfo.date}/>
+                    <StudentView curriculumId={classroomData.curriculumId} classroomId={classroomData.classroomId} dayIndex={classroomData.dayIndex}/>
                 ) : (
-                    <TeacherView date={dateInfo.date}/>
+                    <TeacherView curriculumId={classroomData.curriculumId} classroomId={classroomData.classroomId}/>
                 )}
             </div>
         </div>

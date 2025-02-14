@@ -68,7 +68,7 @@ export default function JoinClassroom({ role, refreshClasses }: { role: string, 
                     <LogIn size={32} />
                 </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent aria-describedby={undefined}>
                 <DialogTitle>Join Classroom</DialogTitle>
                 <Label htmlFor='name' className='text-neutral-700'>
                             Class Code  

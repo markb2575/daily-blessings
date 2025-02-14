@@ -3,7 +3,7 @@
 import { authClient } from '@/lib/auth-client'
 
 
-export default function TeacherView({date}:{date:string}) {
+export default function TeacherView({curriculumId, classroomId}:{curriculumId:number, classroomId:number}) {
     const session = authClient.useSession()
 
 
@@ -25,6 +25,6 @@ export default function TeacherView({date}:{date:string}) {
     // }, [])
 
     return (
-        <div>teacher view {date}</div>
+        <div>teacher view</div>
     )
 }

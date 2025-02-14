@@ -1,9 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { db } from '@/lib/db'
-import { classroom, classroom_member } from '@/lib/db/schema'
+import { classroom, classroom_member, user } from '@/lib/db/schema'
 import { eq, inArray } from 'drizzle-orm'
 import { request } from 'http';
 import { generateCode } from '@/lib/utils';
+import { MySqlInt } from 'drizzle-orm/mysql-core';
 
 export async function POST(req: Request) {
     const data = await req.json()
@@ -28,29 +29,36 @@ export async function POST(req: Request) {
     });
 }
 
-// export async function GET(req: Request) {
-    // const classroomId = req.headers.get('classroomId')
+export async function GET(req: Request) {
+    const classroomId = req.headers.get('classroomId')
+    const id = req.headers.get('id')
+
+
     
-    // if (classroomId === null) {
-    //   return Response.json({ status: 404 })
-    // }
-  
-    // const classroomIds = await db
-    //   .select()
-    //   .from(classroom_member)
-    //   .where(eq(classroom_member.userId, userId))
-  
-    // const classNames = await db
-    // .select({
-    //   classroomName: classroom.classroomName
-    // })
-    // .from(classroom)
-    // .where(
-    //     inArray(classroom.classroomId, classroomIds.map(c => c.classroomId))
-    // )
-    //     return Response.json({
-    //   classrooms: classNames
-    // })
+    if (classroomId === null || id === null) {
+      return Response.json({ status: 404 })
+    }
+
+    const userRole = await db.select({ role: user.role }).from(user).where(eq(user.id, id));
+
+    console.log(classroomId)
+    const classroomData = await db.select().from(classroom).where(eq(classroom.classroomId, Number(classroomId)))
+
+    console.log(classroomData)
+    if (userRole[0].role === 'student') {
+        // if user is student don't give them teacher code
+        classroomData[0].teacherCode = ''
+        return Response.json({
+            classroomData: classroomData[0],
+            role: userRole
+        })
+    } else {
+        return Response.json({
+            classroomData: classroomData,
+            role: userRole
+        })
+    }
+
     
-//   }
+  }
 

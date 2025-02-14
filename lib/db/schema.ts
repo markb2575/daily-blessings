@@ -16,22 +16,16 @@ export const curriculum = mysqlTable("curriculum", {
     name: varchar("name", { length: 24 }),
 });
 
-export const day = mysqlTable("day", {
-    date: date("date", { mode: 'date' }).primaryKey(),
-    copticDate: varchar("copticDate", { length: 36 }).notNull(),
-    feast: text(),
-});
-
 export const curriculum_day = mysqlTable("curriculum_day", {
     curriculumId: int("curriculumId").notNull().references(() => curriculum.curriculumId),
-    date: date("date", { mode: 'date' }).notNull().references(() => day.date),
+    dayIndex: int("dayIndex").notNull(),
     book: varchar("book", { length: 24 }),
     chapter: int("chapter"),
     lowerVerse: int("lowerVerse"),
     upperVerse: int("upperVerse"),
 }, (table) => {
     return {
-        pk: primaryKey({ columns: [table.curriculumId, table.date] }),
+        pk: primaryKey({ columns: [table.curriculumId, table.dayIndex] }),
     };
 });
 
@@ -40,10 +34,10 @@ export const curriculum_questions = mysqlTable("curriculum_questions", {
     isFillInTheBlank: boolean().notNull(),
     question: text().notNull(),
     curriculumId: int("curriculumId").notNull(),
-    date: date("date", { mode: 'date' }).notNull()
+    dayIndex: int("dayIndex").notNull().references(() => curriculum_day.dayIndex),
 }, (table) => {
     return {
-        curriculum_day_reference: foreignKey({ columns: [table.curriculumId, table.date], foreignColumns: [curriculum_day.curriculumId, curriculum_day.date]}),
+        curriculum_day_reference: foreignKey({ columns: [table.curriculumId, table.dayIndex], foreignColumns: [curriculum_day.curriculumId, curriculum_day.dayIndex]}),
     };
 });
 
@@ -52,7 +46,8 @@ export const classroom = mysqlTable("classroom", {
     curriculumId: int("curriculumId").notNull().references(() => curriculum.curriculumId),
     classroomName: varchar('classroomName', { length: 24}).notNull(),
     studentCode: varchar('studentCode', { length: 7 }).notNull(),
-    teacherCode: varchar('teacherCode', { length: 7 }).notNull()
+    teacherCode: varchar('teacherCode', { length: 7 }).notNull(),
+    dayIndex: int("dayIndex").notNull().default(0),
 });
 
 export const classroom_member = mysqlTable("classroom_member", {
@@ -111,7 +106,6 @@ export const verification = mysqlTable("verification", {
 export const schema = {
     user,
     curriculum,
-    day,
     curriculum_day,
     curriculum_questions,
     classroom,

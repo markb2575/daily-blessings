@@ -86,7 +86,7 @@ export default function CreateClassroom({ refreshClasses }: { refreshClasses: Fu
                     <Plus size={32} />
                 </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent aria-describedby={undefined}>
                 {!codes ? (
                     <>
                         <DialogTitle>Create Classroom</DialogTitle>
