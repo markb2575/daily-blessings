@@ -1,4 +1,28 @@
-import 'dotenv/config';
 import { drizzle } from "drizzle-orm/mysql2";
-// You can specify any property from the mysql2 connection options
-export const db = drizzle({ connection: { uri: process.env.DATABASE_URL }});
+import mysql from "mysql2/promise";
+
+if (!process.env.DATABASE_URL) {
+    throw new Error('Missing DATABASE_URL');
+}
+
+// Singleton function to ensure only one db instance is created
+function singleton<Value>(name: string, value: () => Value): Value {
+    const globalAny: any = global;
+    globalAny.__singletons = globalAny.__singletons || {};
+    
+    if (!globalAny.__singletons[name]) {
+      globalAny.__singletons[name] = value();
+    }
+    
+    return globalAny.__singletons[name];
+}
+
+// Function to create the database connection and apply migrations if needed
+function createDatabaseConnection() {
+    const poolConnection = mysql.createPool(process.env.DATABASE_URL!);
+    return drizzle(poolConnection);
+}
+
+const db = singleton('db', createDatabaseConnection);
+
+export { db };

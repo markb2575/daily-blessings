@@ -28,12 +28,12 @@ CREATE TABLE `account` (
 	CONSTRAINT `account_id` PRIMARY KEY(`id`)
 );
 CREATE TABLE `answers` (
-	`answerId` int AUTO_INCREMENT NOT NULL,
 	`questionId` int NOT NULL,
+    `classroomId` int NOT NULL,
 	`answer` text NOT NULL,
 	`userId` varchar(36) NOT NULL,
 	`createdAt` timestamp NOT NULL DEFAULT (now()),
-	CONSTRAINT `answers_answerId` PRIMARY KEY(`answerId`)
+	CONSTRAINT `answers_pk` PRIMARY KEY(`questionId`, `classroomId`, `userId`)
 );
 CREATE TABLE `classroom` (
 	`classroomId` int AUTO_INCREMENT NOT NULL,
@@ -106,6 +106,7 @@ CREATE TABLE `verification` (
 );
 ALTER TABLE `account` ADD CONSTRAINT `account_userId_user_id_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE no action ON UPDATE no action;
 ALTER TABLE `answers` ADD CONSTRAINT `answers_questionId_curriculum_questions_questionId_fk` FOREIGN KEY (`questionId`) REFERENCES `curriculum_questions`(`questionId`) ON DELETE no action ON UPDATE no action;
+ALTER TABLE `answers` ADD CONSTRAINT `answers_classroomId_classroom_classroomId_fk` FOREIGN KEY (`classroomId`) REFERENCES `classroom`(`classroomId`) ON DELETE no action ON UPDATE no action;
 ALTER TABLE `answers` ADD CONSTRAINT `answers_userId_user_id_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE no action ON UPDATE no action;
 ALTER TABLE `classroom` ADD CONSTRAINT `classroom_curriculumId_curriculum_curriculumId_fk` FOREIGN KEY (`curriculumId`) REFERENCES `curriculum`(`curriculumId`) ON DELETE no action ON UPDATE no action;
 ALTER TABLE `classroom_member` ADD CONSTRAINT `classroom_member_classroomId_classroom_classroomId_fk` FOREIGN KEY (`classroomId`) REFERENCES `classroom`(`classroomId`) ON DELETE no action ON UPDATE no action;

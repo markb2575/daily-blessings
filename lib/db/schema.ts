@@ -60,11 +60,15 @@ export const classroom_member = mysqlTable("classroom_member", {
 });
 
 export const answers = mysqlTable("answers", {
-    answerId: int("answerId").primaryKey().autoincrement(),
     questionId: int("questionId").notNull().references(() => curriculum_questions.questionId),
+    classroomId: int("classroomId").notNull().references(() => classroom.classroomId),
     answer: text().notNull(),
     userId: varchar('userId', { length: 36 }).notNull().references(() => user.id),
     createdAt: timestamp('createdAt').notNull().defaultNow(),
+}, (table) => {
+    return {
+        pk: primaryKey({ columns: [table.questionId, table.classroomId, table.userId] }),
+    };
 });
 
 export const session = mysqlTable("session", {

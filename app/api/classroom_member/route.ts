@@ -102,7 +102,7 @@ export async function GET(req: Request) {
             )
         )
     if (classroom.length === 0) {
-        console.log("not in class")
+        // console.log("not in class")
         return Response.json({ error: "Not Found"}, { status:404 });
     }
     return Response.json(

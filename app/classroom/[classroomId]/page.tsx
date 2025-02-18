@@ -58,7 +58,7 @@ export default function Classroom({
                 redirect('/onboarding')
             }
             setClassroomData(data.classroomData)
-            console.log(data)
+            // console.log(data)
             setRole(data.role[0].role)
         })
     }
@@ -91,7 +91,7 @@ export default function Classroom({
         checkUserInClass()
         getClassroomData()
     }, [session.data])
-    console.log(role,"role")
+    // console.log(role,"role")
     if (userInClass === false || classroomData === null || role === 'none') return null
 
     return (
@@ -145,8 +145,7 @@ export default function Classroom({
                 }
 
             />
-            <div className='mx-10 mt-24'>
-                <div>The current day index is {classroomData.dayIndex}</div>
+            <div className='flex mx-10 mt-24 w-full justify-center'>
                 {role === "student" ? (
                     <StudentView curriculumId={classroomData.curriculumId} classroomId={classroomData.classroomId} dayIndex={classroomData.dayIndex}/>
                 ) : (

@@ -41,10 +41,10 @@ export async function GET(req: Request) {
 
     const userRole = await db.select({ role: user.role }).from(user).where(eq(user.id, id));
 
-    console.log(classroomId)
+    // console.log(classroomId)
     const classroomData = await db.select().from(classroom).where(eq(classroom.classroomId, Number(classroomId)))
 
-    console.log(classroomData)
+    // console.log(classroomData)
     if (userRole[0].role === 'student') {
         // if user is student don't give them teacher code
         classroomData[0].teacherCode = ''

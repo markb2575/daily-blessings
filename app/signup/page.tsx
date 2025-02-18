@@ -44,7 +44,7 @@ export default function Signup() {
 
     const handleEmailSignup = async (event: React.FormEvent) => {
         event.preventDefault();
-        console.log(form.email)
+        // console.log(form.email)
         if (form.email === "" || form.password === "" || form.firstName === "" || form.lastName === "" || form.confirmedPassword === "") {
             toast.error("Please fill in all fields.")
             return;
