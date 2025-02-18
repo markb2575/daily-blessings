@@ -16,7 +16,7 @@ type QuestionData = {
     answer: string[] | string
 }
 
-export default function QAList({ curriculumId, classroomId }: { curriculumId: number, classroomId: number }) {
+export default function QAList({ curriculumId, dayIndex, classroomId }: { curriculumId: number, dayIndex: number, classroomId: number }) {
     const session = authClient.useSession()
     const [questionData, setQuestionData] = useState<QuestionData[]>([])
     const [isSaved, setIsSaved] = useState(true)
@@ -27,7 +27,7 @@ export default function QAList({ curriculumId, classroomId }: { curriculumId: nu
         await fetch('/api/curriculum_questions', {
             method: 'GET',
             headers: {
-                dayIndex: "4",
+                dayIndex: dayIndex.toString() || '',
                 curriculumId: curriculumId.toString() || '',
                 classroomId: classroomId.toString() || '',
                 userId: session.data?.user.id.toString() || ''
@@ -38,6 +38,7 @@ export default function QAList({ curriculumId, classroomId }: { curriculumId: nu
             }
             return response.json()
         }).then(data => {
+            // console.log(data.questions)
             setQuestionData(
                 data.questions.map((value: any) => {
                     if (!value.isFillInTheBlank) return value;
@@ -45,6 +46,7 @@ export default function QAList({ curriculumId, classroomId }: { curriculumId: nu
                     // console.log(value.answer, "fetch data", JSON.parse(value.answer))
                     return { ...value, answer: JSON.parse(value.answer) };
                 })
+                // data.questions
             );
         })
     }
