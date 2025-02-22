@@ -37,7 +37,7 @@ export default function Login() {
             },
             onError: (ctx) => {
                 setLoading(false)
-                toast.error(ctx.error.message)
+                toast.error("Unable to login with Google.")
             }
         })
     }
@@ -59,7 +59,7 @@ export default function Login() {
             },
             onError: (ctx) => {
                 setLoading(false)
-                toast.error(ctx.error.message)
+                toast.error("Unable to login with email.")
             }
         })
     };

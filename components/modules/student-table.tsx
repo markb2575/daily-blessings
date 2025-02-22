@@ -59,65 +59,66 @@ export default function StudentTable({ classroomId }: { classroomId: number }) {
     }, [])
 
 
-    console.log(tableData, "here")
     if (tableData.length === 0) return
 
     return (
-        <ScrollArea className="rounded-md border">
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Sun</TableHead>
-                        <TableHead>Mon</TableHead>
-                        <TableHead>Tues</TableHead>
-                        <TableHead>Wed</TableHead>
-                        <TableHead>Thurs</TableHead>
-                        <TableHead>Fri</TableHead>
-                        <TableHead>Sat</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {tableData.length ? (
-                        tableData.map((row, index) => (
-                            <TableRow
-                                key={index}
-                            >
-                                <TableCell className="text-center">
-                                    {row.studentName}
-                                </TableCell>
-                                <TableCell className="justify-items-center">
-                                    {row.sun.completed && <Check />}
-                                </TableCell>
-                                <TableCell className="justify-items-center">
-                                    {row.mon.completed && <Check />}
-                                </TableCell>
-                                <TableCell className="justify-items-center">
-                                    {row.tues.completed && <Check />}
-                                </TableCell>
-                                <TableCell className="justify-items-center">
-                                    {row.wed.completed && <Check />}
-                                </TableCell>
-                                <TableCell className="justify-items-center">
-                                    {row.thurs.completed && <Check />}
-                                </TableCell>
-                                <TableCell className="justify-items-center">
-                                    {row.fri.completed && <Check />}
-                                </TableCell>
-                                <TableCell className="justify-items-center">
-                                    {row.sun.completed && <Check />}
+        <div className="w-full max-w-[80vw] sm:max-w-[40vw] overflow-x-auto rounded-md border max-h-fit">
+            <div className="min-w-[640px]">
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead className="text-left">Name</TableHead>
+                            <TableHead className="text-left">Sun</TableHead>
+                            <TableHead className="text-left">Mon</TableHead>
+                            <TableHead className="text-left">Tues</TableHead>
+                            <TableHead className="text-left">Wed</TableHead>
+                            <TableHead className="text-left">Thurs</TableHead>
+                            <TableHead className="text-left">Fri</TableHead>
+                            <TableHead className="text-left">Sat</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {tableData.length ? (
+                            tableData.map((row, index) => (
+                                <TableRow
+                                    key={index}
+                                >
+                                    <TableCell className="text-left">
+                                        {row.studentName}
+                                    </TableCell>
+                                    <TableCell className="justify-items-left">
+                                        {row.sun.completed && <Check />}
+                                    </TableCell>
+                                    <TableCell className="justify-items-left">
+                                        {row.mon.completed && <Check />}
+                                    </TableCell>
+                                    <TableCell className="justify-items-left">
+                                        {row.tues.completed && <Check />}
+                                    </TableCell>
+                                    <TableCell className="justify-items-left">
+                                        {row.wed.completed && <Check />}
+                                    </TableCell>
+                                    <TableCell className="justify-items-left">
+                                        {row.thurs.completed && <Check />}
+                                    </TableCell>
+                                    <TableCell className="justify-items-left">
+                                        {row.fri.completed && <Check />}
+                                    </TableCell>
+                                    <TableCell className="justify-items-left">
+                                        {row.sun.completed && <Check />}
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={8} className="h-24 text-center">
+                                    No results.
                                 </TableCell>
                             </TableRow>
-                        ))
-                    ) : (
-                        <TableRow>
-                            <TableCell colSpan={8} className="h-24 text-center">
-                                No results.
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
-        </ScrollArea>
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
+        </div>
     )
 }

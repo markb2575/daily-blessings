@@ -27,7 +27,7 @@ export default function TeacherView({ curriculumId, classroomId }: { curriculumI
 
     return (
 
-        <div className='flex justify-items-center'>
+        <div className='flex w-full justify-center'>
             <StudentTable classroomId={classroomId} />
         </div>
     )
