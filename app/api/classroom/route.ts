@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     const teacherCode = generateCode(7)
     const result = await db.insert(classroom).values({curriculumId: Number(curriculumId), classroomName: classroomName, studentCode: studentCode, teacherCode: teacherCode}).$returningId();
     const classroomId = result[0].classroomId
-    await db.insert(classroom_member).values({classroomId: classroomId, userId: userId})
+    await db.insert(classroom_member).values({classroomId: classroomId, userId: userId, role: "teacher"})
 
     return Response.json({
        'studentCode': studentCode,

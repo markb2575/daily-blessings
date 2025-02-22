@@ -46,7 +46,7 @@ export async function POST(req: Request) {
         }
         await db
             .insert(classroom_member)
-            .values({ classroomId: result[0].classroomId, userId: userId })
+            .values({ classroomId: result[0].classroomId, userId: userId, role: "student" })
         return Response.json(
             { status: 200 }
         )
@@ -75,7 +75,7 @@ export async function POST(req: Request) {
         }
         await db
             .insert(classroom_member)
-            .values({ classroomId: result[0].classroomId, userId: userId })
+            .values({ classroomId: result[0].classroomId, userId: userId, role: "teacher" })
         return Response.json(
             { status: 200 }
         )

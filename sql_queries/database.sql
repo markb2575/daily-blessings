@@ -42,11 +42,13 @@ CREATE TABLE `classroom` (
     `teacherCode` varchar(7) NOT NULL,
     `classroomName` varchar(24) NOT NULL,
     `dayIndex` int NOT NULL DEFAULT (0),
+    `createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `classroom_classroomId` PRIMARY KEY(`classroomId`)
 );
 CREATE TABLE `classroom_member` (
 	`classroomId` int NOT NULL,
 	`userId` varchar(36) NOT NULL,
+    `role` varchar(12) NOT NULL,
 	CONSTRAINT `classroom_member_classroomId_userId_pk` PRIMARY KEY(`classroomId`,`userId`)
 );
 CREATE TABLE `curriculum` (

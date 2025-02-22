@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 export default function Navbar({left,right} : {left?:any, right?:any}) {
 
     return (
-        <div className="absolute w-screen h-16 top-0 shadow-lg flex justify-between items-center px-4">
+        <div className="absolute w-screen max-w-full h-16 top-0 shadow-lg flex justify-between items-center px-4">
             <div>
                 {left}
             </div>

@@ -38,13 +38,13 @@ export default function QAList({ curriculumId, dayIndex, classroomId }: { curric
             }
             return response.json()
         }).then(data => {
-            // console.log(data.questions)
+            console.log(data.questions)
             setQuestionData(
                 data.questions.map((value: any) => {
                     if (!value.isFillInTheBlank) return value;
-                    const new_answer = []
-                    // console.log(value.answer, "fetch data", JSON.parse(value.answer))
-                    return { ...value, answer: JSON.parse(value.answer) };
+                    console.log(value)
+                    
+                    return { ...value, answer: value.answer === "" ? value.answer : JSON.parse(value.answer) };
                 })
                 // data.questions
             );

@@ -1,9 +1,10 @@
 'use client'
 
 import { authClient } from '@/lib/auth-client'
+import StudentTable from './student-table'
 
 
-export default function TeacherView({curriculumId, classroomId}:{curriculumId:number, classroomId:number}) {
+export default function TeacherView({ curriculumId, classroomId }: { curriculumId: number, classroomId: number }) {
     const session = authClient.useSession()
 
 
@@ -25,6 +26,9 @@ export default function TeacherView({curriculumId, classroomId}:{curriculumId:nu
     // }, [])
 
     return (
-        <div>teacher view</div>
+
+        <div className='flex justify-items-center'>
+            <StudentTable classroomId={classroomId} />
+        </div>
     )
 }

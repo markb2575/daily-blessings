@@ -48,11 +48,13 @@ export const classroom = mysqlTable("classroom", {
     studentCode: varchar('studentCode', { length: 7 }).notNull(),
     teacherCode: varchar('teacherCode', { length: 7 }).notNull(),
     dayIndex: int("dayIndex").notNull().default(0),
+    createdAt: timestamp('createdAt').notNull().defaultNow(),
 });
 
 export const classroom_member = mysqlTable("classroom_member", {
     classroomId: int("classroomId").notNull().references(() => classroom.classroomId),
     userId: varchar('userId', { length: 36 }).notNull().references(() => user.id),
+    role: varchar("role", { length: 12 }).notNull(),
 }, (table) => {
     return {
         pk: primaryKey({ columns: [table.classroomId, table.userId] }),

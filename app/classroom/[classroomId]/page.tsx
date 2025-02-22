@@ -147,9 +147,9 @@ export default function Classroom({
             />
             <div className='flex mx-10 mt-24 w-full justify-center'>
                 {role === "student" ? (
-                    <StudentView curriculumId={classroomData.curriculumId} classroomId={classroomData.classroomId} dayIndex={classroomData.dayIndex}/>
+                    <StudentView curriculumId={classroomData.curriculumId} classroomId={Number(classroomId)} dayIndex={classroomData.dayIndex}/>
                 ) : (
-                    <TeacherView curriculumId={classroomData.curriculumId} classroomId={classroomData.classroomId}/>
+                    <TeacherView curriculumId={classroomData.curriculumId} classroomId={Number(classroomId)}/>
                 )}
             </div>
         </div>
