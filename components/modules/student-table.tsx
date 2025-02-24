@@ -14,9 +14,16 @@ import {
 } from "@/components/ui/table"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { authClient } from '@/lib/auth-client'
-import { Check } from "lucide-react"
+import { ArrowLeft, ArrowRight, Check, MoveLeft, MoveRight } from "lucide-react"
+import { Button } from "../ui/button"
 
 type TableData = {
+    students: StudentData[],
+    dates: string[],
+    indices: number[]
+} | null
+
+type StudentData = {
     studentName: string,
     mon: DayData,
     tues: DayData,
@@ -24,8 +31,8 @@ type TableData = {
     thurs: DayData,
     fri: DayData,
     sat: DayData,
-    sun: DayData
-}[]
+    sun: DayData,
+}
 
 type DayData = {
     completed: boolean,
@@ -34,14 +41,16 @@ type DayData = {
 
 export default function StudentTable({ classroomId }: { classroomId: number }) {
 
-    const [tableData, setTableData] = useState<TableData>([])
+    const [tableData, setTableData] = useState<TableData>(null)
+    const [tablePage, setTablePage] = useState(0)
 
     const getAnswerTable = async () => {
-        console.log(classroomId)
+        // console.log(tablePage)
         await fetch('/api/answers/list', {
             method: 'GET',
             headers: {
                 classroomId: classroomId.toString() || '',
+                tablePage: tablePage.toString() || ''
             }
         }).then(response => {
             if (!response.ok) {
@@ -50,74 +59,79 @@ export default function StudentTable({ classroomId }: { classroomId: number }) {
             return response.json()
         }).then(data => {
             setTableData(data)
-
+            console.log(data)
         })
     }
 
     useEffect(() => {
         getAnswerTable()
-    }, [])
+    }, [tablePage])
 
-
-    if (tableData.length === 0) return
+    if (tableData === null) return
 
     return (
-        <div className="w-full max-w-[80vw] sm:max-w-[40vw] overflow-x-auto rounded-md border max-h-fit">
-            <div className="min-w-[640px]">
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead className="text-left">Name</TableHead>
-                            <TableHead className="text-left">Sun</TableHead>
-                            <TableHead className="text-left">Mon</TableHead>
-                            <TableHead className="text-left">Tues</TableHead>
-                            <TableHead className="text-left">Wed</TableHead>
-                            <TableHead className="text-left">Thurs</TableHead>
-                            <TableHead className="text-left">Fri</TableHead>
-                            <TableHead className="text-left">Sat</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {tableData.length ? (
-                            tableData.map((row, index) => (
-                                <TableRow
-                                    key={index}
-                                >
-                                    <TableCell className="text-left">
-                                        {row.studentName}
-                                    </TableCell>
-                                    <TableCell className="justify-items-left">
-                                        {row.sun.completed && <Check />}
-                                    </TableCell>
-                                    <TableCell className="justify-items-left">
-                                        {row.mon.completed && <Check />}
-                                    </TableCell>
-                                    <TableCell className="justify-items-left">
-                                        {row.tues.completed && <Check />}
-                                    </TableCell>
-                                    <TableCell className="justify-items-left">
-                                        {row.wed.completed && <Check />}
-                                    </TableCell>
-                                    <TableCell className="justify-items-left">
-                                        {row.thurs.completed && <Check />}
-                                    </TableCell>
-                                    <TableCell className="justify-items-left">
-                                        {row.fri.completed && <Check />}
-                                    </TableCell>
-                                    <TableCell className="justify-items-left">
-                                        {row.sun.completed && <Check />}
+        <div>
+            <div className="flex justify-evenly mb-2 select-none">
+                <ArrowLeft onClick={() => setTablePage((prev) => prev - 1)} className="hover:opacity-50"/>
+                <ArrowRight onClick={() => setTablePage((prev) => prev + 1)} className="hover:opacity-50"/>
+            </div>
+            <div className="w-full max-w-[80vw] sm:max-w-[40vw] overflow-x-auto rounded-md border max-h-fit">
+                <div className="min-w-[640px]">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead className="text-left">Name</TableHead>
+                                <TableHead className="text-left">Sun<br/>{tableData.dates[0].split('/')[0]}/{tableData.dates[0].split('/')[1]}</TableHead>
+                                <TableHead className="text-left">Mon<br/>{tableData.dates[1].split('/')[0]}/{tableData.dates[1].split('/')[1]}</TableHead>
+                                <TableHead className="text-left">Tues<br/>{tableData.dates[2].split('/')[0]}/{tableData.dates[2].split('/')[1]}</TableHead>
+                                <TableHead className="text-left">Wed<br/>{tableData.dates[3].split('/')[0]}/{tableData.dates[3].split('/')[1]}</TableHead>
+                                <TableHead className="text-left">Thurs<br/>{tableData.dates[4].split('/')[0]}/{tableData.dates[4].split('/')[1]}</TableHead>
+                                <TableHead className="text-left">Fri<br/>{tableData.dates[5].split('/')[0]}/{tableData.dates[5].split('/')[1]}</TableHead>
+                                <TableHead className="text-left">Sat<br/>{tableData.dates[6].split('/')[0]}/{tableData.dates[6].split('/')[1]}</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {tableData.students.length ? (
+                                tableData.students.map((row: StudentData, index) => (
+                                    <TableRow
+                                        key={index}
+                                    >
+                                        <TableCell className="text-left">
+                                            {row.studentName}
+                                        </TableCell>
+                                        <TableCell className="justify-items-left">
+                                            {row.sun.completed && <Check />}
+                                        </TableCell>
+                                        <TableCell className="justify-items-left">
+                                            {row.mon.completed && <Check />}
+                                        </TableCell>
+                                        <TableCell className="justify-items-left">
+                                            {row.tues.completed && <Check />}
+                                        </TableCell>
+                                        <TableCell className="justify-items-left">
+                                            {row.wed.completed && <Check />}
+                                        </TableCell>
+                                        <TableCell className="justify-items-left">
+                                            {row.thurs.completed && <Check />}
+                                        </TableCell>
+                                        <TableCell className="justify-items-left">
+                                            {row.fri.completed && <Check />}
+                                        </TableCell>
+                                        <TableCell className="justify-items-left">
+                                            {row.sat.completed && <Check />}
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={8} className="h-24 text-center">
+                                        No results.
                                     </TableCell>
                                 </TableRow>
-                            ))
-                        ) : (
-                            <TableRow>
-                                <TableCell colSpan={8} className="h-24 text-center">
-                                    No results.
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
+                            )}
+                        </TableBody>
+                    </Table>
+                </div>
             </div>
         </div>
     )
