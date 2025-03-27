@@ -44,7 +44,8 @@ export default function QAList({ curriculumId, dayIndex, classroomId }: { curric
                     if (!value.isFillInTheBlank) return value;
                     console.log(value)
                     
-                    return { ...value, answer: value.answer === "" ? value.answer : JSON.parse(value.answer) };
+                    const parsedAnswer = value.answer === "" ? [] : JSON.parse(value.answer);
+                    return { ...value, answer: Array.isArray(parsedAnswer) ? parsedAnswer : [parsedAnswer] };
                 })
                 // data.questions
             );

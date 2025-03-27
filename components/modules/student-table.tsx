@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/table"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { authClient } from '@/lib/auth-client'
-import { ArrowLeft, ArrowRight, Check, MoveLeft, MoveRight } from "lucide-react"
+import { ArrowLeft, ArrowRight, Check, MoveLeft, MoveRight, X } from "lucide-react"
 import { Button } from "../ui/button"
 
 type TableData = {
@@ -36,10 +36,10 @@ type StudentData = {
 
 type DayData = {
     completed: boolean,
-    answers: string[]
+    answers: { answer: string; questionId: number }[];
 }
 
-export default function StudentTable({ classroomId }: { classroomId: number }) {
+export default function StudentTable({ classroomId, showAnswers }: { classroomId: number; showAnswers: Function }) {
 
     const [tableData, setTableData] = useState<TableData>(null)
     const [tablePage, setTablePage] = useState(0)
@@ -69,11 +69,12 @@ export default function StudentTable({ classroomId }: { classroomId: number }) {
 
     if (tableData === null) return
 
+
     return (
         <div>
             <div className="flex justify-evenly mb-2 select-none">
-                <ArrowLeft onClick={() => setTablePage((prev) => prev - 1)} className="hover:opacity-50"/>
-                <ArrowRight onClick={() => setTablePage((prev) => prev + 1)} className="hover:opacity-50"/>
+                <ArrowLeft onClick={() => setTablePage((prev) => prev - 1)} className="hover:opacity-50" />
+                <ArrowRight onClick={() => setTablePage((prev) => prev + 1)} className="hover:opacity-50" />
             </div>
             <div className="w-full max-w-[80vw] sm:max-w-[40vw] overflow-x-auto rounded-md border max-h-fit">
                 <div className="min-w-[640px]">
@@ -81,13 +82,13 @@ export default function StudentTable({ classroomId }: { classroomId: number }) {
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="text-left">Name</TableHead>
-                                <TableHead className="text-left">Sun<br/>{tableData.dates[0].split('/')[0]}/{tableData.dates[0].split('/')[1]}</TableHead>
-                                <TableHead className="text-left">Mon<br/>{tableData.dates[1].split('/')[0]}/{tableData.dates[1].split('/')[1]}</TableHead>
-                                <TableHead className="text-left">Tues<br/>{tableData.dates[2].split('/')[0]}/{tableData.dates[2].split('/')[1]}</TableHead>
-                                <TableHead className="text-left">Wed<br/>{tableData.dates[3].split('/')[0]}/{tableData.dates[3].split('/')[1]}</TableHead>
-                                <TableHead className="text-left">Thurs<br/>{tableData.dates[4].split('/')[0]}/{tableData.dates[4].split('/')[1]}</TableHead>
-                                <TableHead className="text-left">Fri<br/>{tableData.dates[5].split('/')[0]}/{tableData.dates[5].split('/')[1]}</TableHead>
-                                <TableHead className="text-left">Sat<br/>{tableData.dates[6].split('/')[0]}/{tableData.dates[6].split('/')[1]}</TableHead>
+                                <TableHead className="text-left">Sun<br />{tableData.dates[0].split('/')[0]}/{tableData.dates[0].split('/')[1]}</TableHead>
+                                <TableHead className="text-left">Mon<br />{tableData.dates[1].split('/')[0]}/{tableData.dates[1].split('/')[1]}</TableHead>
+                                <TableHead className="text-left">Tues<br />{tableData.dates[2].split('/')[0]}/{tableData.dates[2].split('/')[1]}</TableHead>
+                                <TableHead className="text-left">Wed<br />{tableData.dates[3].split('/')[0]}/{tableData.dates[3].split('/')[1]}</TableHead>
+                                <TableHead className="text-left">Thurs<br />{tableData.dates[4].split('/')[0]}/{tableData.dates[4].split('/')[1]}</TableHead>
+                                <TableHead className="text-left">Fri<br />{tableData.dates[5].split('/')[0]}/{tableData.dates[5].split('/')[1]}</TableHead>
+                                <TableHead className="text-left">Sat<br />{tableData.dates[6].split('/')[0]}/{tableData.dates[6].split('/')[1]}</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -99,26 +100,26 @@ export default function StudentTable({ classroomId }: { classroomId: number }) {
                                         <TableCell className="text-left">
                                             {row.studentName}
                                         </TableCell>
-                                        <TableCell className="justify-items-left">
-                                            {row.sun.completed && <Check />}
+                                        <TableCell className="justify-items-left" onClick={() => {showAnswers(row.sun.answers)}}>
+                                            {row.sun.completed ? <Check color="green"/> : <X color="red"/>}
                                         </TableCell>
-                                        <TableCell className="justify-items-left">
-                                            {row.mon.completed && <Check />}
+                                        <TableCell className="justify-items-left" onClick={() => {showAnswers(row.mon.answers)}}>
+                                            {row.mon.completed ? <Check color="green"/> : <X color="red"/>}
                                         </TableCell>
-                                        <TableCell className="justify-items-left">
-                                            {row.tues.completed && <Check />}
+                                        <TableCell className="justify-items-left" onClick={() => {showAnswers(row.tues.answers)}}>
+                                            {row.tues.completed ? <Check color="green"/> : <X color="red"/>}
                                         </TableCell>
-                                        <TableCell className="justify-items-left">
-                                            {row.wed.completed && <Check />}
+                                        <TableCell className="justify-items-left" onClick={() => {showAnswers(row.wed.answers)}}>
+                                            {row.wed.completed ? <Check color="green"/> : <X color="red"/>}
                                         </TableCell>
-                                        <TableCell className="justify-items-left">
-                                            {row.thurs.completed && <Check />}
+                                        <TableCell className="justify-items-left" onClick={() => {showAnswers(row.thurs.answers)}}>
+                                            {row.thurs.completed ? <Check color="green"/> : <X color="red"/>}
                                         </TableCell>
-                                        <TableCell className="justify-items-left">
-                                            {row.fri.completed && <Check />}
+                                        <TableCell className="justify-items-left" onClick={() => {showAnswers(row.fri.answers)}}>
+                                            {row.fri.completed ? <Check color="green"/> : <X color="red"/>}
                                         </TableCell>
-                                        <TableCell className="justify-items-left">
-                                            {row.sat.completed && <Check />}
+                                        <TableCell className="justify-items-left" onClick={() => {showAnswers(row.sat.answers)}}>
+                                            {row.sat.completed ? <Check color="green"/> : <X color="red"/>}
                                         </TableCell>
                                     </TableRow>
                                 ))

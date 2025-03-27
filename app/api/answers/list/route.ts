@@ -24,7 +24,6 @@ export async function GET(req: Request) {
         const createdAtDate = new Date(classroom.createdAt); // Classroom creation date
         const currentDayIndex = classroom.dayIndex + (Number(tablePage) * 7); 
         // Current day index from the classroom
-        // console.log(currentDayIndex)
         // Helper function to get the start of the week (Monday)
         function getStartOfWeek(date: Date) {
             const day = date.getDay(); // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
@@ -36,24 +35,19 @@ export async function GET(req: Request) {
         const adjustedDate = new Date(createdAtDate);
         adjustedDate.setDate(createdAtDate.getDate() + currentDayIndex);
         const startOfWeek = getStartOfWeek(adjustedDate);
-        // console.log(startOfWeek)
         // Calculate the dates for each day of the week (Monday to Sunday)
-        const daysOfWeek = ["sun", "mon", "tues", "wed", "thurs", "fri", "sat"];
+        const daysOfWeek: DayOfWeek[] = ["mon", "tues", "wed", "thurs", "fri", "sat", "sun"];
         const dayDates = daysOfWeek.map((_, index) => {
             const dayDate = new Date(startOfWeek);
             dayDate.setDate(startOfWeek.getDate() + index); // Add days to Monday
             return dayDate;
         });
-        console.log(dayDates)
         // Calculate the dayIndex for each day by comparing with createdAtDate
-        console.log(createdAtDate)
         const dayIndices = dayDates.map((dayDate) => {
             const timeDifference = dayDate.getTime() - createdAtDate.getTime();
             const dayDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24)); // Difference in days
-            // console.log(dayDifference)
             return dayDifference;
         });
-        // console.log(dayIndices)
         // Step 3: Fetch questionIds for each day
         const questions = await db.query.curriculum_questions.findMany({
             where: and(
@@ -62,10 +56,16 @@ export async function GET(req: Request) {
             ),
         });
         
-        const questionMap = questions.reduce((acc: any, q: any) => {
-            acc[q.dayIndex] = q.questionId;
+        const questionMap: Record<number, number[]> = questions.reduce((acc, q) => {
+            if (acc[q.dayIndex]) {
+                // If the dayIndex already exists, push the questionId to the array
+                acc[q.dayIndex].push(q.questionId);
+            } else {
+                // Otherwise, initialize the dayIndex with a new array
+                acc[q.dayIndex] = [q.questionId];
+            }
             return acc;
-        }, {} as Record<number, number>);
+        }, {} as Record<number, number[]>);
 
         // Step 4: Fetch all students in the classroom
         const members = await db.query.classroom_member.findMany({
@@ -74,17 +74,15 @@ export async function GET(req: Request) {
                 eq(schema.classroom_member.role, "student")
             ),
         });
-
         const userIds = members.map((member: any) => member.userId);
         // Step 5: Fetch answers for all students
         const answers = await db.query.answers.findMany({
             where: and(
-                inArray(schema.answers.questionId, Object.values(questionMap)),
+                inArray(schema.answers.questionId, Object.values(questionMap).flat()),
                 inArray(schema.answers.userId, userIds),
                 eq(schema.answers.classroomId, parseInt(classroomId))
             ),
         });
-
         const answerMap = answers.reduce((acc: any, answer: any) => {
             if (!acc[answer.userId]) acc[answer.userId] = {};
             acc[answer.userId][answer.questionId] = answer.answer;
@@ -92,34 +90,69 @@ export async function GET(req: Request) {
         }, {} as Record<string, Record<number, string>>);
 
         // Step 6: Format the data into the desired JSON structure
+        type StudentAnswer = {
+            completed: boolean;
+            answers: { answer: string; questionId: number }[];
+        };
+        type DayOfWeek = "mon" | "tues" | "wed" | "thurs" | "fri" | "sat" | "sun";
+        type StudentAnswers = {
+            [key in DayOfWeek]: StudentAnswer;
+        };
         const students = await Promise.all(
             members.map(async (member: any) => {
                 const user = await db.query.user.findFirst({
                     where: eq(schema.user.id, member.userId),
                 });
-
+        
                 const studentAnswers = daysOfWeek.reduce((acc, day, index) => {
                     const dayIndex = dayIndices[index];
-                    const questionId = questionMap[dayIndex];
-                    const answer = answerMap[member.userId]?.[questionId];
+                    const questionIds = questionMap[dayIndex]; // Array of question IDs for the current day
+        
+                    console.log("questionIds", questionIds);
+                    console.log("answers", answerMap[member.userId]);
+                    console.log("acc", acc);
+        
+                    // Check if answerMap[member.userId] is undefined or keys don't match questionIds
+                    if (
+                        !answerMap[member.userId] || // Check if answerMap[member.userId] is undefined
+                        !questionIds.every((id) => id in answerMap[member.userId]!) // Check if all questionIds exist as keys
+                    ) {
+                        acc[day] = {
+                            completed: false,
+                            answers: [], // No answers if the check fails
+                        };
+                        return acc;
+                    }
+        
+                    // Extract and format answers with their corresponding questionIds
+                    const answers = questionIds
+                        .map((id) => {
+                            const answer = answerMap[member.userId]?.[id]; // Get the answer for the questionId
+                            return answer
+                                ? { answer, questionId: id } // Pair the answer with its questionId
+                                : null; // Exclude invalid answers
+                        })
+                        .filter((item): item is { answer: string; questionId: number } => item !== null); // Filter out nulls and refine type
+        
                     acc[day] = {
-                        completed: !!answer,
-                        answers: answer ? [answer] : []
+                        completed: answers.length > 0, // Completed if there are valid answers
+                        answers: answers, // Array of { answer, questionId }
                     };
                     return acc;
-                }, {} as Record<string, { completed: boolean; answers: string[]}>);
+                }, {} as Record<string, StudentAnswer>);
+        
                 return {
                     studentName: user?.name || "Unknown",
                     ...studentAnswers,
                 };
             })
         );
+        console.log("students", students)
         const table = {
             students,
             dates: dayDates.map((val) => val.toLocaleDateString()),
             indices: dayIndices
         }
-        // console.log(table.students)
         // console.log(table.indices)
         return new Response(JSON.stringify(table), { status: 200 });
     } catch (error) {
