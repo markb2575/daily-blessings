@@ -60,7 +60,7 @@ export default function TeacherView({ curriculumId, classroomId }: { curriculumI
     };
 
     return (
-        <div className='flex w-full justify-center'>
+        <div className='flex justify-items-center justify-center'>
             <StudentTable classroomId={classroomId} showAnswers={showAnswers} />
             {modalOpened && <div className="backdrop-blur-sm w-screen h-screen fixed left-0 top-0 m-0 p-0 flex flex-col items-center justify-center bg-gray-100 bg-opacity-50" onClick={() => setModalOpened(false)}>
                 <div className="w-full max-w-2xl px-4 rounded-md p-6 shadow-md bg-white">

@@ -145,7 +145,7 @@ export default function Classroom({
                 }
 
             />
-            <div className='flex mx-10 mt-24 w-full justify-center'>
+            <div className='flex mt-24 w-full justify-center'>
                 {role === "student" ? (
                     <StudentView curriculumId={classroomData.curriculumId} classroomId={Number(classroomId)} dayIndex={classroomData.dayIndex}/>
                 ) : (

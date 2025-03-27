@@ -1,8 +1,5 @@
 'use client'
-import { Textarea } from "@/components/ui/textarea"
-import { Card } from "../ui/card"
-import { ChangeEvent, useEffect, useState, useRef } from "react"
-import { Input } from "../ui/input"
+import { useEffect, useState } from "react"
 import React from "react"
 import {
     Table,
@@ -12,10 +9,8 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { authClient } from '@/lib/auth-client'
 import { ArrowLeft, ArrowRight, Check, MoveLeft, MoveRight, X } from "lucide-react"
-import { Button } from "../ui/button"
+
 
 type TableData = {
     students: StudentData[],
@@ -45,7 +40,6 @@ export default function StudentTable({ classroomId, showAnswers }: { classroomId
     const [tablePage, setTablePage] = useState(0)
 
     const getAnswerTable = async () => {
-        // console.log(tablePage)
         await fetch('/api/answers/list', {
             method: 'GET',
             headers: {
@@ -69,72 +63,72 @@ export default function StudentTable({ classroomId, showAnswers }: { classroomId
 
     if (tableData === null) return
 
-
     return (
         <div>
-            <div className="flex justify-evenly mb-2 select-none">
+            <div className="flex justify-evenly mb-4 select-none">
                 <ArrowLeft onClick={() => setTablePage((prev) => prev - 1)} className="hover:opacity-50" />
                 <ArrowRight onClick={() => setTablePage((prev) => prev + 1)} className="hover:opacity-50" />
             </div>
-            <div className="w-full max-w-[80vw] sm:max-w-[40vw] overflow-x-auto rounded-md border max-h-fit">
-                <div className="min-w-[640px]">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="text-center">Name</TableHead>
-                                <TableHead className="text-center">Sun<br />{tableData.dates[0].split('/')[0]}/{tableData.dates[0].split('/')[1]}</TableHead>
-                                <TableHead className="text-center">Mon<br />{tableData.dates[1].split('/')[0]}/{tableData.dates[1].split('/')[1]}</TableHead>
-                                <TableHead className="text-center">Tues<br />{tableData.dates[2].split('/')[0]}/{tableData.dates[2].split('/')[1]}</TableHead>
-                                <TableHead className="text-center">Wed<br />{tableData.dates[3].split('/')[0]}/{tableData.dates[3].split('/')[1]}</TableHead>
-                                <TableHead className="text-center">Thurs<br />{tableData.dates[4].split('/')[0]}/{tableData.dates[4].split('/')[1]}</TableHead>
-                                <TableHead className="text-center">Fri<br />{tableData.dates[5].split('/')[0]}/{tableData.dates[5].split('/')[1]}</TableHead>
-                                <TableHead className="text-center">Sat<br />{tableData.dates[6].split('/')[0]}/{tableData.dates[6].split('/')[1]}</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {tableData.students.length ? (
-                                tableData.students.map((row: StudentData, index) => (
-                                    <TableRow
-                                        key={index}
-                                        className="hover:bg-white"
-                                    >
-                                        <TableCell className="text-center">
-                                            {row.studentName}
-                                        </TableCell>
-                                        <TableCell className="justify-items-center hover:bg-gray-100 hover:cursor-pointer" onClick={() => {showAnswers(row.sun.answers)}}>
-                                            {row.sun.completed ? <Check color="green"/> : <X color="red"/>}
-                                        </TableCell>
-                                        <TableCell className="justify-items-center hover:bg-gray-100 hover:cursor-pointer" onClick={() => {showAnswers(row.mon.answers)}}>
-                                            {row.mon.completed ? <Check color="green"/> : <X color="red"/>}
-                                        </TableCell>
-                                        <TableCell className="justify-items-center hover:bg-gray-100 hover:cursor-pointer" onClick={() => {showAnswers(row.tues.answers)}}>
-                                            {row.tues.completed ? <Check color="green"/> : <X color="red"/>}
-                                        </TableCell>
-                                        <TableCell className="justify-items-center hover:bg-gray-100 hover:cursor-pointer" onClick={() => {showAnswers(row.wed.answers)}}>
-                                            {row.wed.completed ? <Check color="green"/> : <X color="red"/>}
-                                        </TableCell>
-                                        <TableCell className="justify-items-center hover:bg-gray-100 hover:cursor-pointer" onClick={() => {showAnswers(row.thurs.answers)}}>
-                                            {row.thurs.completed ? <Check color="green"/> : <X color="red"/>}
-                                        </TableCell>
-                                        <TableCell className="justify-items-center hover:bg-gray-100 hover:cursor-pointer" onClick={() => {showAnswers(row.fri.answers)}}>
-                                            {row.fri.completed ? <Check color="green"/> : <X color="red"/>}
-                                        </TableCell>
-                                        <TableCell className="justify-items-center hover:bg-gray-100 hover:cursor-pointer" onClick={() => {showAnswers(row.sat.answers)}}>
-                                            {row.sat.completed ? <Check color="green"/> : <X color="red"/>}
+
+                <div className="w-[340px] md:w-[640px] overflow-x-auto rounded-md border max-h-fit">
+                    <div >
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead className="text-center">Name</TableHead>
+                                    <TableHead className="text-center">Sun<br />{tableData.dates[0].split('/')[0]}/{tableData.dates[0].split('/')[1]}</TableHead>
+                                    <TableHead className="text-center">Mon<br />{tableData.dates[1].split('/')[0]}/{tableData.dates[1].split('/')[1]}</TableHead>
+                                    <TableHead className="text-center">Tues<br />{tableData.dates[2].split('/')[0]}/{tableData.dates[2].split('/')[1]}</TableHead>
+                                    <TableHead className="text-center">Wed<br />{tableData.dates[3].split('/')[0]}/{tableData.dates[3].split('/')[1]}</TableHead>
+                                    <TableHead className="text-center">Thurs<br />{tableData.dates[4].split('/')[0]}/{tableData.dates[4].split('/')[1]}</TableHead>
+                                    <TableHead className="text-center">Fri<br />{tableData.dates[5].split('/')[0]}/{tableData.dates[5].split('/')[1]}</TableHead>
+                                    <TableHead className="text-center">Sat<br />{tableData.dates[6].split('/')[0]}/{tableData.dates[6].split('/')[1]}</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {tableData.students.length ? (
+                                    tableData.students.map((row: StudentData, index) => (
+                                        <TableRow
+                                            key={index}
+                                            className="hover:bg-white"
+                                        >
+                                            <TableCell className="text-center">
+                                                {row.studentName}
+                                            </TableCell>
+                                            <TableCell className="justify-items-center hover:bg-gray-100 hover:cursor-pointer" onClick={() => { showAnswers(row.sun.answers) }}>
+                                                {row.sun.completed ? <Check color="green" /> : <X color="red" />}
+                                            </TableCell>
+                                            <TableCell className="justify-items-center hover:bg-gray-100 hover:cursor-pointer" onClick={() => { showAnswers(row.mon.answers) }}>
+                                                {row.mon.completed ? <Check color="green" /> : <X color="red" />}
+                                            </TableCell>
+                                            <TableCell className="justify-items-center hover:bg-gray-100 hover:cursor-pointer" onClick={() => { showAnswers(row.tues.answers) }}>
+                                                {row.tues.completed ? <Check color="green" /> : <X color="red" />}
+                                            </TableCell>
+                                            <TableCell className="justify-items-center hover:bg-gray-100 hover:cursor-pointer" onClick={() => { showAnswers(row.wed.answers) }}>
+                                                {row.wed.completed ? <Check color="green" /> : <X color="red" />}
+                                            </TableCell>
+                                            <TableCell className="justify-items-center hover:bg-gray-100 hover:cursor-pointer" onClick={() => { showAnswers(row.thurs.answers) }}>
+                                                {row.thurs.completed ? <Check color="green" /> : <X color="red" />}
+                                            </TableCell>
+                                            <TableCell className="justify-items-center hover:bg-gray-100 hover:cursor-pointer" onClick={() => { showAnswers(row.fri.answers) }}>
+                                                {row.fri.completed ? <Check color="green" /> : <X color="red" />}
+                                            </TableCell>
+                                            <TableCell className="justify-items-center hover:bg-gray-100 hover:cursor-pointer" onClick={() => { showAnswers(row.sat.answers) }}>
+                                                {row.sat.completed ? <Check color="green" /> : <X color="red" />}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                ) : (
+                                    <TableRow>
+                                        <TableCell colSpan={8} className="h-24 text-center">
+                                            No results.
                                         </TableCell>
                                     </TableRow>
-                                ))
-                            ) : (
-                                <TableRow>
-                                    <TableCell colSpan={8} className="h-24 text-center">
-                                        No results.
-                                    </TableCell>
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
+                                )}
+                            </TableBody>
+                        </Table>
+                    </div>
                 </div>
-            </div>
         </div>
     )
 }
