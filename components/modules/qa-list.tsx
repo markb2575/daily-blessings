@@ -13,7 +13,9 @@ type QuestionData = {
     question: string,
     curriculumId: number,
     dayIndex: number,
-    answer: string[] | string
+    answer: string[] | string,
+    bibleReference?: string,
+    bibleVerses?: string
 }
 
 export default function QAList({ curriculumId, dayIndex, classroomId }: { curriculumId: number, dayIndex: number, classroomId: number }) {
@@ -65,10 +67,11 @@ export default function QAList({ curriculumId, dayIndex, classroomId }: { curric
             await fetch('/api/answers', {
                 method: 'POST',
                 headers: {
+                    'Content-Type': 'application/json',
                     classroomId: classroomId.toString() || '',
-                    questionData: JSON.stringify(questionDataRef.current) || '',
                     userId: session.data?.user.id.toString() || ''
-                }
+                },
+                body: JSON.stringify({ questionData: questionDataRef.current })
             })
         } catch (error) {
             console.error("Error saving data:", error)
@@ -114,13 +117,46 @@ export default function QAList({ curriculumId, dayIndex, classroomId }: { curric
 
     return (
         <Card className="flex flex-col p-5 gap-4 mb-10 w-full md:w-1/2 h-fit">
+            {/* Show the reference and passage only once at the top if present */}
+            {(() => {
+                const firstWithReference = questionData.find(
+                    q => q.bibleReference && q.bibleVerses
+                );
+                if (firstWithReference) {
+                    // Split verses into lines and prefix each with its verse number if possible
+                    const lines = (firstWithReference.bibleVerses ?? '').split('\n').filter(Boolean);
+                    // const book = firstWithReference.bibleReference.split(' ')[0];
+                    // const chapter = firstWithReference.bibleReference.split(' ')[1]?.split(':')[0];
+
+                    return (
+                        <>
+                            <div className="text-xs text-gray-500 mb-1">{firstWithReference.bibleReference}</div>
+                            <div className="text-sm text-gray-700 whitespace-pre-line mb-2">
+                                {lines.map((line, idx) => {
+                                    // Try to extract the verse number from the line, fallback to sequential
+                                    const match = line.match(/^(\d+)\s*(.*)/);
+                                    if (match) {
+                                        return (
+                                            <div key={idx}>
+                                                <span className="font-bold">{match[1]}</span> {match[2]}
+                                            </div>
+                                        );
+                                    }
+                                    return <div key={idx}>{line}</div>;
+                                })}
+                            </div>
+                        </>
+                    );
+                }
+                return null;
+            })()}
             {questionData.map((v, i) => (
                 <div key={i}>
+                    {/* Do NOT show bibleReference or bibleVerses here */}
                     {v.isFillInTheBlank ? (
                         <div>
-                            {v.question.split("_").map((blank_value, blank_index, arr) => {
-                                // console.log(v.answer, "render")
-                                return (<React.Fragment key={blank_index}>
+                            {v.question.split("_").map((blank_value, blank_index, arr) => (
+                                <React.Fragment key={blank_index}>
                                     <span className="inline mb-2">{blank_value}</span>
                                     {blank_index < arr.length - 1 && (
                                         <Input
@@ -129,8 +165,8 @@ export default function QAList({ curriculumId, dayIndex, classroomId }: { curric
                                             onChange={(e) => handleOnBlankChange(e, i, blank_index)}
                                         />
                                     )}
-                                </React.Fragment>)
-                            })}
+                                </React.Fragment>
+                            ))}
                         </div>
                     ) : (
                         <>
