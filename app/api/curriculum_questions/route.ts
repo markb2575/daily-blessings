@@ -36,25 +36,25 @@ export async function GET(req: Request) {
                 bibleReference = `${day.book} ${day.chapter}`;
             }
 
-            // Fetch verses from Bible API (using WEB translation as NKJV is not available)
-            const apiRef = bibleReference.replace(/\s+/g, '+');
-            const bibleApiUrl = `https://bible-api.com/${encodeURIComponent(apiRef)}?translation=web`;
-            try {
-                const verseRes = await fetch(bibleApiUrl);
-                if (verseRes.ok) {
-                    const verseData = await verseRes.json();
-                    if (Array.isArray(verseData.verses)) {
-                        // Concatenate verse number and text for each verse
-                        bibleVerses = verseData.verses
-                            .map((v: any) => `${v.verse} ${v.text.trim()}`)
-                            .join('\n');
-                    } else {
-                        bibleVerses = verseData.text || "";
-                    }
-                }
-            } catch (err) {
-                bibleVerses = "";
-            }
+        //     // Fetch verses from Bible API (using WEB translation as NKJV is not available)
+        //     const apiRef = bibleReference.replace(/\s+/g, '+');
+        //     const bibleApiUrl = `https://bible-api.com/${encodeURIComponent(apiRef)}?translation=web`;
+        //     try {
+        //         const verseRes = await fetch(bibleApiUrl);
+        //         if (verseRes.ok) {
+        //             const verseData = await verseRes.json();
+        //             if (Array.isArray(verseData.verses)) {
+        //                 // Concatenate verse number and text for each verse
+        //                 bibleVerses = verseData.verses
+        //                     .map((v: any) => `${v.verse} ${v.text.trim()}`)
+        //                     .join('\n');
+        //             } else {
+        //                 bibleVerses = verseData.text || "";
+        //             }
+        //         }
+        //     } catch (err) {
+        //         bibleVerses = "";
+        //     }
         }
 
         // Fetch questions based on dayIndex and curriculumId

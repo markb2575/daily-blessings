@@ -18,6 +18,7 @@ type QuestionData = {
     bibleVerses?: string
 }
 
+
 export default function QAList({ curriculumId, dayIndex, classroomId }: { curriculumId: number, dayIndex: number, classroomId: number }) {
     const session = authClient.useSession()
     const [questionData, setQuestionData] = useState<QuestionData[]>([])
@@ -52,6 +53,8 @@ export default function QAList({ curriculumId, dayIndex, classroomId }: { curric
                 // data.questions
             );
         })
+
+
     }
 
     useEffect(() => {
@@ -62,6 +65,7 @@ export default function QAList({ curriculumId, dayIndex, classroomId }: { curric
         questionDataRef.current = questionData
     }, [questionData])
 
+    
     const saveData = async () => {
         try {
             await fetch('/api/answers', {
@@ -116,72 +120,42 @@ export default function QAList({ curriculumId, dayIndex, classroomId }: { curric
     }
 
     return (
-        <Card className="flex flex-col p-5 gap-4 mb-10 w-full md:w-1/2 h-fit">
-            {/* Show the reference and passage only once at the top if present */}
-            {(() => {
-                const firstWithReference = questionData.find(
-                    q => q.bibleReference && q.bibleVerses
-                );
-                if (firstWithReference) {
-                    // Split verses into lines and prefix each with its verse number if possible
-                    const lines = (firstWithReference.bibleVerses ?? '').split('\n').filter(Boolean);
-                    // const book = firstWithReference.bibleReference.split(' ')[0];
-                    // const chapter = firstWithReference.bibleReference.split(' ')[1]?.split(':')[0];
-
-                    return (
-                        <>
-                            <div className="text-xs text-gray-500 mb-1">{firstWithReference.bibleReference}</div>
-                            <div className="text-sm text-gray-700 whitespace-pre-line mb-2">
-                                {lines.map((line, idx) => {
-                                    // Try to extract the verse number from the line, fallback to sequential
-                                    const match = line.match(/^(\d+)\s*(.*)/);
-                                    if (match) {
-                                        return (
-                                            <div key={idx}>
-                                                <span className="font-bold">{match[1]}</span> {match[2]}
-                                            </div>
-                                        );
-                                    }
-                                    return <div key={idx}>{line}</div>;
-                                })}
+            <Card className="flex flex-col p-5 gap-4 mb-10 w-full md:w-1/2 h-fit">
+                <a className="text-xs text-gray-500 mb-1" href="https://www.biblegateway.com/passage/?search=1 Corinthians 13:1-13&version=NIV&src=tools">
+                    {questionData[0]?.bibleReference}
+                </a>
+                {questionData.map((v, i) => (
+                    <div key={i}>
+                        {/* Do NOT show bibleReference or bibleVerses here */}
+                        {v.isFillInTheBlank ? (
+                            <div>
+                                {v.question.split("_").map((blank_value, blank_index, arr) => (
+                                    <React.Fragment key={blank_index}>
+                                        <span className="inline mb-2">{blank_value}</span>
+                                        {blank_index < arr.length - 1 && (
+                                            <Input
+                                                value={v.answer[blank_index]}
+                                                className="inline w-32 mx-2 align-middle border-0 border-b-2 rounded-none focus-visible:ring-0 focus-visible:border-b-blue-700 mb-2"
+                                                onChange={(e) => handleOnBlankChange(e, i, blank_index)}
+                                            />
+                                        )}
+                                    </React.Fragment>
+                                ))}
                             </div>
-                        </>
-                    );
-                }
-                return null;
-            })()}
-            {questionData.map((v, i) => (
-                <div key={i}>
-                    {/* Do NOT show bibleReference or bibleVerses here */}
-                    {v.isFillInTheBlank ? (
-                        <div>
-                            {v.question.split("_").map((blank_value, blank_index, arr) => (
-                                <React.Fragment key={blank_index}>
-                                    <span className="inline mb-2">{blank_value}</span>
-                                    {blank_index < arr.length - 1 && (
-                                        <Input
-                                            value={v.answer[blank_index]}
-                                            className="inline w-32 mx-2 align-middle border-0 border-b-2 rounded-none focus-visible:ring-0 focus-visible:border-b-blue-700 mb-2"
-                                            onChange={(e) => handleOnBlankChange(e, i, blank_index)}
-                                        />
-                                    )}
-                                </React.Fragment>
-                            ))}
-                        </div>
-                    ) : (
-                        <>
-                            <div className="mb-2">{v?.question}</div>
-                            <Textarea
-                                value={v.answer}
-                                placeholder="Enter your answer here."
-                                className="resize-none"
-                                onChange={(e) => handleOnTextChange(e, i)}
-                            />
-                        </>
-                    )}
-                </div>
-            ))}
-            {isSaved ? <div className="text-sm flex gap-1">Saved<Check size={20}/></div>: <div className="text-sm">Saving...</div>}
-        </Card>
+                        ) : (
+                            <>
+                                <div className="mb-2">{v?.question}</div>
+                                <Textarea
+                                    value={v.answer}
+                                    placeholder="Enter your answer here."
+                                    className="resize-none"
+                                    onChange={(e) => handleOnTextChange(e, i)}
+                                />
+                            </>
+                        )}
+                    </div>
+                ))}
+                {isSaved ? <div className="text-sm flex gap-1">Saved<Check size={20}/></div>: <div className="text-sm">Saving...</div>}
+            </Card>
     )
 }
