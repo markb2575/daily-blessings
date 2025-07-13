@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react'
 import React from 'react'
 import { useRouter } from 'next/navigation'
 import { classroom } from '@/lib/db/schema'
+import Script from 'next/script'
 
 type ClassroomData = {
     classroomId: number,
@@ -22,7 +23,13 @@ type ClassroomData = {
     teacherCode: string | '',
     dayIndex: number
 } | null
- 
+declare global {
+    var BGLinks: {
+      version: string;
+      linkVerses: () => void;
+      apocrypha: boolean;
+    };
+}
 
 export default function Classroom({
     params
@@ -152,6 +159,15 @@ export default function Classroom({
                     <TeacherView curriculumId={classroomData.curriculumId} classroomId={Number(classroomId)}/>
                 )}
             </div>
+            <Script 
+                src="https://www.biblegateway.com/public/link-to-us/tooltips/bglinks.js" 
+                strategy="afterInteractive"
+                onLoad={() => {
+                    BGLinks.version = "NKJV";
+                    BGLinks.linkVerses();
+                    BGLinks.apocrypha = true;
+                }}
+            />
         </div>
     )
 }
