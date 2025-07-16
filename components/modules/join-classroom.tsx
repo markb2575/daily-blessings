@@ -9,7 +9,6 @@ import { LogIn } from 'lucide-react'
 import { authClient } from '@/lib/auth-client'
 import { toast } from 'sonner'
 import {
-    DialogHeader,
     DialogTitle,
     DialogFooter,
     DialogClose,
@@ -17,18 +16,11 @@ import {
     Dialog,
     DialogTrigger
 } from '../ui/dialog'
-import {
-    Select,
-    SelectTrigger,
-    SelectContent,
-    SelectItem,
-    SelectValue
-} from '../ui/select'
-import { classroom } from '@/lib/db/schema'
 
 export default function JoinClassroom({ role, refreshClasses }: { role: string, refreshClasses: Function }) {
     const [code, setCode] = useState('')
     const session = authClient.useSession()
+    const [open, setOpen] = useState(false)
     
     const resetForm = () => {
         setCode('')
@@ -38,7 +30,7 @@ export default function JoinClassroom({ role, refreshClasses }: { role: string, 
     const joinClass = async () =>{
 
         if (code === '') {
-            toast.error("Text not input ")
+            toast.error("Please enter a classroom code");
             return; 
         }
 
@@ -52,7 +44,9 @@ export default function JoinClassroom({ role, refreshClasses }: { role: string, 
             .then(response => {
                 if (!response.ok) {
                     toast.error("Unable to join class")
+                    return response;
                 }
+                setOpen(false)
                 refreshClasses()
                 return response
                 
@@ -60,10 +54,9 @@ export default function JoinClassroom({ role, refreshClasses }: { role: string, 
     }
     
     return (
-        <Dialog onOpenChange={resetForm}>
+        <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) resetForm(); }}>
             <DialogTrigger asChild>
-                    {/* I added somthing here dont forget it Put it in use effect so dont need this*/}
-                <Button variant='outline'>  
+                <Button variant='outline' onClick={() => setOpen(true)}>  
                     <div>Join</div>
                     <LogIn size={32} />
                 </Button>

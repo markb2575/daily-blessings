@@ -54,11 +54,28 @@ export async function GET(req: Request) {
         })
     } else {
         return Response.json({
-            classroomData: classroomData,
+            classroomData: classroomData[0],
             role: userRole
         })
     }
 
     
   }
+
+export async function DELETE(req: Request) {
+    const classroomId = req.headers.get('classroomId');
+    if (!classroomId) {
+        return Response.json({ error: 'Missing classroomId' }, { status: 400 });
+    }
+    try {
+        // Remove classroom members first (if foreign key constraint exists)
+        await db.delete(classroom_member).where(eq(classroom_member.classroomId, Number(classroomId)));
+        // Remove classroom
+        await db.delete(classroom).where(eq(classroom.classroomId, Number(classroomId)));
+        return Response.json({ success: true }, { status: 200 });
+    } catch (error) {
+        console.error('Error deleting classroom:', error);
+        return Response.json({ error: 'Failed to delete classroom', details: String(error) }, { status: 500 });
+    }
+}
 

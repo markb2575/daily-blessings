@@ -66,8 +66,8 @@ export default function StudentTable({ classroomId, showAnswers }: { classroomId
     return (
         <div>
             <div className="flex justify-evenly mb-4 select-none">
-                <ArrowLeft onClick={() => setTablePage((prev) => prev - 1)} className="hover:opacity-50" />
-                <ArrowRight onClick={() => setTablePage((prev) => prev + 1)} className="hover:opacity-50" />
+                <ArrowLeft onClick={() => setTablePage((prev) => prev - 1)} className="hover:opacity-50 cursor-pointer" />
+                <ArrowRight onClick={() => setTablePage((prev) => prev + 1)} className="hover:opacity-50 cursor-pointer" />
             </div>
 
                 <div className="w-[340px] md:w-[640px] overflow-x-auto rounded-md border max-h-fit">

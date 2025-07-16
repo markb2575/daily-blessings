@@ -57,7 +57,7 @@ export default function Classroom({
             }
         }).then(response => {
             if (!response.ok) {
-                throw new Error('Network response was not ok')
+                throw new Error('Classroom not found')
             }
             return response.json()
         }).then(data => {
@@ -98,8 +98,9 @@ export default function Classroom({
         checkUserInClass()
         getClassroomData()
     }, [session.data])
-    // console.log(role,"role")
+
     if (userInClass === false || classroomData === null || role === 'none') return null
+
 
     return (
         <div className='flex min-h-screen font-Open_Sans'>
@@ -156,7 +157,12 @@ export default function Classroom({
                 {role === "student" ? (
                     <StudentView curriculumId={classroomData.curriculumId} classroomId={Number(classroomId)} dayIndex={classroomData.dayIndex}/>
                 ) : (
-                    <TeacherView curriculumId={classroomData.curriculumId} classroomId={Number(classroomId)}/>
+                    <TeacherView 
+                        curriculumId={classroomData.curriculumId} 
+                        classroomId={Number(classroomId)} 
+                        teacherCode={classroomData.teacherCode}
+                        studentCode={classroomData.studentCode}
+                    />
                 )}
             </div>
             <Script 
