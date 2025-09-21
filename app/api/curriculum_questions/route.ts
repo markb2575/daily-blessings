@@ -9,7 +9,6 @@ export async function GET(req: Request) {
     const curriculumId = req.headers.get('curriculumId');
     const classroomId = req.headers.get('classroomId');
     const userId = req.headers.get('userId');
-
     // Validate headers
     if (dayIndex === null || curriculumId === null || classroomId === null || userId === null) {
         return Response.json({ error: "Incorrect Headers" }, { status: 400 });

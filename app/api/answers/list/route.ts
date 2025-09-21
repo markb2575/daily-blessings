@@ -108,9 +108,9 @@ export async function GET(req: Request) {
                     const dayIndex = dayIndices[index];
                     const questionIds = questionMap[dayIndex]; // Array of question IDs for the current day
         
-                    console.log("questionIds", questionIds);
-                    console.log("answers", answerMap[member.userId]);
-                    console.log("acc", acc);
+                    // console.log("questionIds", questionIds);
+                    // console.log("answers", answerMap[member.userId]);
+                    // console.log("acc", acc);
         
                     // Check if answerMap[member.userId] is undefined or keys don't match questionIds
                     if (
@@ -147,7 +147,7 @@ export async function GET(req: Request) {
                 };
             })
         );
-        console.log("students", students)
+        // console.log("students", students)
         const table = {
             students,
             dates: dayDates.map((val) => val.toLocaleDateString()),

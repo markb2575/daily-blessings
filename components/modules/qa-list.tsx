@@ -50,11 +50,11 @@ export default function QAList({
                 return response.json()
             })
             .then(data => {
-                console.log(data.questions)
+                console.log(data)
                 setQuestionData(
                     data.questions.map((value: any) => {
                         if (!value.isFillInTheBlank) return value
-                        console.log(value)
+                        // console.log(value)
 
                         const parsedAnswer =
                             value.answer === '' ? [] : JSON.parse(value.answer)
@@ -79,7 +79,7 @@ export default function QAList({
     }, [questionData])
 
     const saveData = async () => {
-        try {
+        try {console.log("hhh",questionDataRef.current)
             await fetch('/api/answers', {
                 method: 'POST',
                 headers: {
