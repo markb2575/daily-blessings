@@ -53,7 +53,7 @@ export default function StudentTable({ classroomId, showAnswers }: { classroomId
             return response.json()
         }).then(data => {
             setTableData(data)
-            console.log(data)
+            // console.log(data)
         })
     }
 

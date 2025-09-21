@@ -71,7 +71,7 @@ export default function TeacherView({ curriculumId, classroomId, teacherCode, st
             setModalOpened(true)
             
 
-            console.log('Combined Data:', combinedData);
+            // console.log('Combined Data:', combinedData);
         } catch (error) {
             console.error('Error fetching curriculum questions:', error);
         }
