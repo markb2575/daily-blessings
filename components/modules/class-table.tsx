@@ -1,7 +1,7 @@
 'use client'
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
-import { Settings2, Users, BookOpen } from 'lucide-react'
+import { Users, BookOpen } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { authClient } from '@/lib/auth-client'
 import { useRouter } from 'next/navigation'
@@ -107,11 +107,6 @@ export function ClassTable({
                                 <p className='mt-1 text-sm capitalize text-muted-foreground'>
                                     {role} • Active
                                 </p>
-                            </div>
-                            <div className='ml-3 flex-shrink-0'>
-                                <div className='flex h-8 w-8 items-center justify-center rounded-full bg-background/80 backdrop-blur-sm transition-colors duration-200 group-hover:bg-primary/10'>
-                                    <Settings2 className='h-4 w-4 text-muted-foreground transition-colors duration-200 group-hover:text-primary' />
-                                </div>
                             </div>
                         </div>
                     </CardHeader>

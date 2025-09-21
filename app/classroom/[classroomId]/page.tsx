@@ -1,6 +1,4 @@
 'use client'
-import CreateClassroom from '@/components/modules/create-classroom'
-import JoinClassroom from '@/components/modules/join-classroom'
 import StudentView from '@/components/modules/student-view'
 import TeacherView from '@/components/modules/teacher-view'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
@@ -12,7 +10,6 @@ import { redirect } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import React from 'react'
 import { useRouter } from 'next/navigation'
-import { classroom } from '@/lib/db/schema'
 import Script from 'next/script'
 
 type ClassroomData = {

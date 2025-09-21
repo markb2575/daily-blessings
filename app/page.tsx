@@ -1,23 +1,11 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
 import { authClient } from '@/lib/auth-client'
 import { redirect } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { Plus, LogOut, Settings, User, LogIn } from 'lucide-react'
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger
-} from '@/components/ui/dialog'
-import { Label } from '@/components/ui/label'
+import { LogOut, Settings, User } from 'lucide-react'
 import Navbar from '@/components/ui/navbar'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -27,16 +15,6 @@ import {
     DropdownMenuTrigger,
     DropdownMenuLabel
 } from '@/components/ui/dropdown-menu'
-import { Separator } from '@radix-ui/react-dropdown-menu'
-import { Input } from '@/components/ui/input'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue
-} from '@/components/ui/select'
 import CreateClassroom from '@/components/modules/create-classroom'
 import JoinClassroom from '@/components/modules/join-classroom'
 import { ClassTable } from '@/components/modules/class-table'
@@ -145,7 +123,7 @@ export default function Home() {
                     }
                 />
 
-                <div className='mx-10 mt-24'>
+                <div className='mx-10 mt-24 w-full'>
                     <div className='mb-8 cursor-default space-y-20 text-2xl font-semibold'>
                         Welcome, {session.data?.user.name}! You are a {role}
                     </div>

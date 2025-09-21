@@ -1,7 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
 import { db } from '@/lib/db'
-import { answers, classroom, classroom_member, curriculum_questions } from '@/lib/db/schema'
-import { ConsoleLogWriter, eq, inArray, and } from 'drizzle-orm'
+import { answers } from '@/lib/db/schema'
 
 export async function POST(req: Request) {
     try {

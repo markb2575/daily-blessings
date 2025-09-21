@@ -1,9 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
 import { db } from '@/lib/db'
 import { classroom, classroom_member } from '@/lib/db/schema'
 import { eq, inArray } from 'drizzle-orm'
-import { request } from 'http'
-import { generateCode } from '@/lib/utils'
 
 export async function GET(req: Request) {
     const userId = req.headers.get('userId')
