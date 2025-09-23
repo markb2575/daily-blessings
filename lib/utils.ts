@@ -7,6 +7,6 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function generateCode(len: number) {
-    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
-    return Array.from({ length: len }, () => chars[randomInt(36)]).join('')
+    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    return Array.from({ length: len }, () => chars[randomInt(chars.length)]).join('');
 }

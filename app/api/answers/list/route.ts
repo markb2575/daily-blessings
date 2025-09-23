@@ -95,9 +95,12 @@ export async function GET(req: Request) {
             answers: { answer: string; questionId: number }[];
         };
         type DayOfWeek = "mon" | "tues" | "wed" | "thurs" | "fri" | "sat" | "sun";
-        type StudentAnswers = {
-            [key in DayOfWeek]: StudentAnswer;
-        };
+
+        // unsed for now
+        // type StudentAnswers = {
+        //     [key in DayOfWeek]: StudentAnswer;
+        // };
+
         const students = await Promise.all(
             members.map(async (member: any) => {
                 const user = await db.query.user.findFirst({

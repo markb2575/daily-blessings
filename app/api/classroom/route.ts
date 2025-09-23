@@ -17,8 +17,8 @@ export async function POST(req: Request) {
     if (curriculumId == null || classroomName == null) {
         return Response.json({ error: "Incorrect Headers" }, { status:400 });
     }
-    const studentCode = generateCode(7)
-    const teacherCode = generateCode(7)
+    const studentCode = generateCode(9)
+    const teacherCode = generateCode(9)
     const result = await db.insert(classroom).values({curriculumId: Number(curriculumId), classroomName: classroomName, studentCode: studentCode, teacherCode: teacherCode}).$returningId();
     const classroomId = result[0].classroomId
     await db.insert(classroom_member).values({classroomId: classroomId, userId: userId, role: "teacher"})
