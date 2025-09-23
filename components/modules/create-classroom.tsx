@@ -2,13 +2,11 @@
 
 import { Button } from '@/components/ui/button'
 import { useEffect, useState } from 'react'
-import { TabsContent } from '../ui/tabs'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
 import { authClient } from '@/lib/auth-client'
 import {
     Dialog,
-    DialogHeader,
     DialogTrigger,
     DialogTitle,
     DialogFooter,
@@ -25,15 +23,16 @@ import {
 } from '../ui/select'
 import { toast } from 'sonner'
 import { Copy, Plus } from 'lucide-react'
+import { Codes, curriculums } from '@/lib/types'
 
-export default function CreateClassroom({ refreshClasses }: { refreshClasses: Function }) {
-    const [codes, setCodes] = useState<any>(null)
-    const [curriculums, setCurriculums] = useState([])
+export default function CreateClassroom({ refreshClasses }: { refreshClasses: () => void }) {
+    const [codes, setCodes] = useState<Codes>()
+    const [curriculums, setCurriculums] = useState<curriculums>([])
     const [curriculumId, setCurriculumId] = useState('')
     const [classroomName, setClassroomName] = useState('')
     const session = authClient.useSession()
     const resetForm = () => {
-        setCodes(null)
+        setCodes(undefined)
         setCurriculumId('')
         setClassroomName('')
     }
@@ -114,7 +113,7 @@ export default function CreateClassroom({ refreshClasses }: { refreshClasses: Fu
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                                {curriculums.map((v: any, _i) => (
+                                {curriculums.map((v) => (
                                     <SelectItem
                                         key={v.curriculumId}
                                         value={v.curriculumId}

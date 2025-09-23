@@ -1,10 +1,7 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
 import { db } from '@/lib/db'
 import { classroom, classroom_member, user } from '@/lib/db/schema'
-import { eq, inArray } from 'drizzle-orm'
-import { request } from 'http';
+import { eq } from 'drizzle-orm'
 import { generateCode } from '@/lib/utils';
-import { MySqlInt } from 'drizzle-orm/mysql-core';
 
 export async function POST(req: Request) {
     const data = await req.json()

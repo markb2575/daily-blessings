@@ -29,33 +29,34 @@ export default function Home() {
 
     // const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     useEffect(() => {
+        const checkRole = async () => {
+            const id = session.data?.session.userId
+    
+            if (id == undefined) return
+            await fetch('/api/user/role', {
+                method: 'GET',
+                headers: {
+                    id: id || ''
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok')
+                    }
+                    return response.json()
+                })
+                .then(data => {
+                    if (data.role === 'none') {
+                        redirect('/onboarding')
+                    }
+    
+                    setRole(data.role)
+                })
+        }
         checkRole()
     }, [session.data?.session.userId])
 
-    const checkRole = async () => {
-        const id = session.data?.session.userId
 
-        if (id == undefined) return
-        await fetch('/api/user/role', {
-            method: 'GET',
-            headers: {
-                id: id || ''
-            }
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok')
-                }
-                return response.json()
-            })
-            .then(data => {
-                if (data.role === 'none') {
-                    redirect('/onboarding')
-                }
-
-                setRole(data.role)
-            })
-    }
 
     const [isLoading, setIsLoading] = useState(true)
     const refreshClasses = () => {

@@ -1,8 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
 import { db } from '@/lib/db'
 import { user } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
-import { request } from 'http';
 
 
 export async function GET(req: Request) {

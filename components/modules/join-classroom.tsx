@@ -1,8 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { useEffect, useState } from 'react'
-import { TabsContent } from '../ui/tabs'
+import { useState } from 'react'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
 import { LogIn } from 'lucide-react'
@@ -17,7 +16,7 @@ import {
     DialogTrigger
 } from '../ui/dialog'
 
-export default function JoinClassroom({ role, refreshClasses }: { role: string, refreshClasses: Function }) {
+export default function JoinClassroom({ role, refreshClasses }: { role: string, refreshClasses: () => void }) {
     const [code, setCode] = useState('')
     const session = authClient.useSession()
     const [open, setOpen] = useState(false)

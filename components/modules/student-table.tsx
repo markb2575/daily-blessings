@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import React from "react"
 import {
     Table,
@@ -9,57 +9,79 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { ArrowLeft, ArrowRight, Check, MoveLeft, MoveRight, X } from "lucide-react"
+import { ArrowLeft, ArrowRight, Check, X } from "lucide-react"
+import { ModalData, StudentData, TableData } from "@/lib/types"
 
 
-type TableData = {
-    students: StudentData[],
-    dates: string[],
-    indices: number[]
-} | null
-
-type StudentData = {
-    studentName: string,
-    mon: DayData,
-    tues: DayData,
-    wed: DayData,
-    thurs: DayData,
-    fri: DayData,
-    sat: DayData,
-    sun: DayData,
-}
-
-type DayData = {
-    completed: boolean,
-    answers: { answer: string; questionId: number }[];
-}
-
-export default function StudentTable({ classroomId, showAnswers }: { classroomId: number; showAnswers: Function }) {
+export default function StudentTable({ classroomId, setModalData, setModalOpened }: { classroomId: number; setModalData: Dispatch<SetStateAction<ModalData>>; setModalOpened: Dispatch<SetStateAction<boolean>> }) {
 
     const [tableData, setTableData] = useState<TableData>(null)
     const [tablePage, setTablePage] = useState(0)
 
-    const getAnswerTable = async () => {
-        await fetch('/api/answers/list', {
-            method: 'GET',
-            headers: {
-                classroomId: classroomId.toString() || '',
-                tablePage: tablePage.toString() || ''
-            }
-        }).then(response => {
+    const showAnswers = async (answers: { answer: string; questionId: number }[]) => {
+        if (answers.every(answer => answer.answer.trim() === '')) {
+            return;
+        }
+        try {
+            // Step 1: Extract questionIds from the answers array
+            const questionIds = answers.map(answer => answer.questionId);
+
+            // Step 2: Fetch data from the API
+            const response = await fetch('/api/curriculum_questions/list', {
+                method: 'GET',
+                headers: {
+                    'questionIds': JSON.stringify(questionIds), // Serialize as JSON string
+                },
+            });
+
             if (!response.ok) {
-                throw new Error('Network response was not ok')
+                throw new Error('Network response was not ok');
             }
-            return response.json()
-        }).then(data => {
-            setTableData(data)
-            // console.log(data)
-        })
-    }
+
+            // Step 3: Parse the fetched data
+            const data: { isFillInTheBlank: boolean, question: string, questionId: number }[] = await response.json();
+
+            // Step 4: Combine answers and fetched data into modalData format
+            const combinedData = answers.map(answer => {
+                const matchingQuestion = data.find(q => q.questionId === answer.questionId);
+                return {
+                    answer: answer.answer,
+                    question: matchingQuestion?.question || '', // Use empty string if no match
+                    isFillInTheBlank: matchingQuestion?.isFillInTheBlank || false, // Default to false if no match
+                };
+            });
+
+            // Step 5: Update the modalData state
+            setModalData(combinedData);
+            setModalOpened(true)
+            
+
+            // console.log('Combined Data:', combinedData);
+        } catch (error) {
+            console.error('Error fetching curriculum questions:', error);
+        }
+    };
 
     useEffect(() => {
+        const getAnswerTable = async () => {
+            await fetch('/api/answers/list', {
+                method: 'GET',
+                headers: {
+                    classroomId: classroomId.toString() || '',
+                    tablePage: tablePage.toString() || ''
+                }
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok')
+                }
+                return response.json()
+            }).then(data => {
+                setTableData(data)
+                // console.log(data)
+            })
+        }
         getAnswerTable()
-    }, [tablePage])
+    }, [tablePage, classroomId])
 
     if (tableData === null) return
 

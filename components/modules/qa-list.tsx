@@ -6,17 +6,8 @@ import { Input } from '../ui/input'
 import React from 'react'
 import { authClient } from '@/lib/auth-client'
 import { Check } from 'lucide-react'
+import { QuestionData } from '@/lib/types'
 
-type QuestionData = {
-    questionId: number
-    isFillInTheBlank: boolean
-    question: string
-    curriculumId: number
-    dayIndex: number
-    answer: string[] | string
-    bibleReference?: string
-    bibleVerses?: string
-}
 
 export default function QAList({
     curriculumId,
@@ -33,81 +24,83 @@ export default function QAList({
     const questionDataRef = useRef(questionData)
     const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-    const getTodaysQuestions = async () => {
-        await fetch('/api/curriculum_questions', {
-            method: 'GET',
-            headers: {
-                dayIndex: dayIndex.toString() || '',
-                curriculumId: curriculumId.toString() || '',
-                classroomId: classroomId.toString() || '',
-                userId: session.data?.user.id.toString() || ''
-            }
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok')
-                }
-                return response.json()
-            })
-            .then(data => {
-                console.log(data)
-                setQuestionData(
-                    data.questions.map((value: any) => {
-                        if (!value.isFillInTheBlank) return value
-                        // console.log(value)
-
-                        const parsedAnswer =
-                            value.answer === '' ? [] : JSON.parse(value.answer)
-                        return {
-                            ...value,
-                            answer: Array.isArray(parsedAnswer)
-                                ? parsedAnswer
-                                : [parsedAnswer]
-                        }
-                    })
-                    // data.questions
-                )
-            })
-    }
-
     useEffect(() => {
+        const getTodaysQuestions = async () => {
+            await fetch('/api/curriculum_questions', {
+                method: 'GET',
+                headers: {
+                    dayIndex: dayIndex.toString() || '',
+                    curriculumId: curriculumId.toString() || '',
+                    classroomId: classroomId.toString() || '',
+                    userId: session.data?.user.id.toString() || ''
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok')
+                    }
+                    return response.json()
+                })
+                .then(data => {
+                    console.log(data)
+                    setQuestionData(
+                        data.questions.map((value: QuestionData) => {
+                            if (!value.isFillInTheBlank) return value
+                            // console.log(value)
+
+                            const parsedAnswer =
+                                value.answer === ''
+                                    ? []
+                                    : JSON.parse(value.answer as string)
+                            return {
+                                ...value,
+                                answer: Array.isArray(parsedAnswer)
+                                    ? parsedAnswer
+                                    : [parsedAnswer]
+                            }
+                        })
+                        // data.questions
+                    )
+                })
+        }
         getTodaysQuestions()
-    }, [])
+    }, [classroomId, curriculumId, dayIndex, session.data?.user.id])
 
     useEffect(() => {
         questionDataRef.current = questionData
     }, [questionData])
 
-    const saveData = async () => {
-        try {console.log("hhh",questionDataRef.current)
-            await fetch('/api/answers', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    classroomId: classroomId.toString() || '',
-                    userId: session.data?.user.id.toString() || ''
-                },
-                body: JSON.stringify({ questionData: questionDataRef.current })
-            })
-        } catch (error) {
-            console.error('Error saving data:', error)
-        }
-    }
 
-    const debounceSave = () => {
-        if (saveTimeoutRef.current) {
-            clearTimeout(saveTimeoutRef.current)
-        }
-        setIsSaved(false)
-        saveTimeoutRef.current = setTimeout(() => {
-            saveData()
-            setIsSaved(true)
-        }, 2000)
-    }
 
     useEffect(() => {
+        const saveData = async () => {
+            try {
+                console.log('hhh', questionDataRef.current)
+                await fetch('/api/answers', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        classroomId: classroomId.toString() || '',
+                        userId: session.data?.user.id.toString() || ''
+                    },
+                    body: JSON.stringify({ questionData: questionDataRef.current })
+                })
+            } catch (error) {
+                console.error('Error saving data:', error)
+            }
+        }
+        const debounceSave = () => {
+            if (saveTimeoutRef.current) {
+                clearTimeout(saveTimeoutRef.current)
+            }
+            setIsSaved(false)
+            saveTimeoutRef.current = setTimeout(() => {
+                saveData()
+                setIsSaved(true)
+            }, 2000)
+        }
         debounceSave()
-    }, [questionData])
+    }, [questionData, classroomId, session.data?.user.id])
 
     const handleOnTextChange = (
         e: ChangeEvent<HTMLTextAreaElement>,
@@ -128,7 +121,7 @@ export default function QAList({
         setQuestionData(prev =>
             prev.map((item: QuestionData, index) => {
                 if (index === i) {
-                    let new_answer = [
+                    const new_answer = [
                         ...(Array.isArray(item.answer) ? item.answer : [])
                     ]
                     new_answer[blank_index] = e.target.value
@@ -143,7 +136,7 @@ export default function QAList({
     return (
         <Card className='mb-10 flex h-fit w-full flex-col gap-4 p-5 md:w-1/2'>
             <a
-                className='bibleref text-sm text-gray-500 mb-1'
+                className='bibleref mb-1 text-sm text-gray-500'
                 target='_BLANK'
                 href={`https://www.biblegateway.com/passage/?search=${questionData[0]?.bibleReference}&version=NKJV&src=tools`}
             >

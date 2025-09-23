@@ -1,4 +1,3 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
 import { db } from '@/lib/db'
 import { curriculum_questions } from '@/lib/db/schema'
 import { inArray } from 'drizzle-orm'
@@ -12,7 +11,7 @@ export async function GET(req: Request) {
     let questionIds: number[];
     try {
         questionIds = JSON.parse(questionIdsHeader);
-    } catch (parseError) {
+    } catch {
         return new Response(
             JSON.stringify({ error: "Invalid 'questionIds' format. Expected a JSON array." }),
             { status: 400, headers: { 'Content-Type': 'application/json' } }

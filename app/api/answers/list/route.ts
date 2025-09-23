@@ -1,7 +1,7 @@
 import { eq, and, inArray } from "drizzle-orm";
 import { db } from "@/lib/db"; // Assuming you have a Drizzle ORM database connection setup
 import { schema } from "@/lib/db/schema";
-
+import { member } from "@/lib/types";
 
 export async function GET(req: Request) {
     try {
@@ -74,7 +74,7 @@ export async function GET(req: Request) {
                 eq(schema.classroom_member.role, "student")
             ),
         });
-        const userIds = members.map((member: any) => member.userId);
+        const userIds = members.map((member: member) => member.userId);
         // Step 5: Fetch answers for all students
         const answers = await db.query.answers.findMany({
             where: and(
@@ -83,7 +83,7 @@ export async function GET(req: Request) {
                 eq(schema.answers.classroomId, parseInt(classroomId))
             ),
         });
-        const answerMap = answers.reduce((acc: any, answer: any) => {
+        const answerMap = answers.reduce((acc, answer) => {
             if (!acc[answer.userId]) acc[answer.userId] = {};
             acc[answer.userId][answer.questionId] = answer.answer;
             return acc;
@@ -102,7 +102,7 @@ export async function GET(req: Request) {
         // };
 
         const students = await Promise.all(
-            members.map(async (member: any) => {
+            members.map(async (member: member) => {
                 const user = await db.query.user.findFirst({
                     where: eq(schema.user.id, member.userId),
                 });

@@ -38,8 +38,8 @@ CREATE TABLE `answers` (
 CREATE TABLE `classroom` (
 	`classroomId` int AUTO_INCREMENT NOT NULL,
 	`curriculumId` int NOT NULL,
-    `studentCode` varchar(7) NOT NULL,
-    `teacherCode` varchar(7) NOT NULL,
+    `studentCode` varchar(9) NOT NULL,
+    `teacherCode` varchar(9) NOT NULL,
     `classroomName` varchar(24) NOT NULL,
     `dayIndex` int NOT NULL DEFAULT (0),
     `createdAt` timestamp NOT NULL DEFAULT (now()),

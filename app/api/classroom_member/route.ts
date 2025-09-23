@@ -1,9 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
 import { db } from '@/lib/db'
-import { classroom, classroom_member, user } from '@/lib/db/schema'
+import { classroom, classroom_member } from '@/lib/db/schema'
 import { eq, and } from 'drizzle-orm'
-import { request } from 'http'
-import { generateCode } from '@/lib/utils'
 
 export async function POST(req: Request) {
     const data = await req.json()

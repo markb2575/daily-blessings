@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Card } from "@/components/ui/card";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -35,7 +34,7 @@ export default function Login() {
             onRequest: () => {
                 setLoading(true)
             },
-            onError: (ctx) => {
+            onError: () => {
                 setLoading(false)
                 toast.error("Unable to login with Google.")
             }
@@ -57,13 +56,13 @@ export default function Login() {
             onRequest: () => {
                 setLoading(true)
             },
-            onError: (ctx) => {
+            onError: () => {
                 setLoading(false)
                 toast.error("Unable to login with email.")
             }
         })
     };
-    const handleChange = (e: any) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setForm({
             ...form,
             [e.target.id]: e.target.value
@@ -128,7 +127,12 @@ export default function Login() {
                         <Checkbox
                             id="rememberMe"
                             className="border-gray-400 bg-white"
-                            onClick={handleChange}
+                            onCheckedChange={(checked: boolean) =>
+                                setForm({
+                                  ...form,
+                                  rememberMe: checked === true,
+                                })
+                            }
                         />
                         <Label className="text-gray-700"  htmlFor="rememberMe">Remember me</Label>
                     </div>

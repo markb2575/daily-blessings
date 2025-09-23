@@ -3,15 +3,13 @@ import mysql from "mysql2/promise";
 import { schema } from "./schema";
 
 // Singleton function to ensure only one db instance is created
-function singleton<Value>(name: string, value: () => Value): Value {
-    const globalAny: any = global;
-    globalAny.__singletons = globalAny.__singletons || {};
-
-    if (!globalAny.__singletons[name]) {
-        globalAny.__singletons[name] = value();
+function singleton<T>(name: string, value: () => T): T {
+    const g = globalThis as { __singletons?: Record<string, unknown> };
+    if (!g.__singletons) g.__singletons = {};
+    if (!(name in g.__singletons)) {
+      g.__singletons[name] = value();
     }
-
-    return globalAny.__singletons[name];
+    return g.__singletons[name] as T;
 }
 
 // Function to create the database connection

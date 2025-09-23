@@ -1,6 +1,5 @@
 'use client'
 
-import { authClient } from '@/lib/auth-client'
 import StudentTable from './student-table'
 import { useState } from 'react'
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogFooter, DialogClose } from '@/components/ui/dialog';
@@ -10,22 +9,9 @@ import { Label } from '@/components/ui/label';
 import { Copy, Trash, Settings } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { ModalData, TeacherViewProps } from '@/lib/types';
 
-type ModalData = {
-    answer: string;
-    question: string;
-    isFillInTheBlank: boolean;
-}[] | [];
-
-type TeacherViewProps = {
-    curriculumId: number,
-    classroomId: number,
-    teacherCode: string,
-    studentCode: string
-};
-
-export default function TeacherView({ curriculumId, classroomId, teacherCode, studentCode }: TeacherViewProps) {
-    const session = authClient.useSession()
+export default function TeacherView({ classroomId, teacherCode, studentCode }: TeacherViewProps) {
     const [modalOpened, setModalOpened] = useState(false)
     const [modalData, setModalData] = useState<ModalData>([])
     const [sheetOpen, setSheetOpen] = useState(false)
@@ -33,49 +19,6 @@ export default function TeacherView({ curriculumId, classroomId, teacherCode, st
     const [deleting, setDeleting] = useState(false)
     const router = useRouter();
 
-    const showAnswers = async (answers: { answer: string; questionId: number }[]) => {
-        if (answers.every(answer => answer.answer.trim() === '')) {
-            return;
-        }
-        try {
-            // Step 1: Extract questionIds from the answers array
-            const questionIds = answers.map(answer => answer.questionId);
-
-            // Step 2: Fetch data from the API
-            const response = await fetch('/api/curriculum_questions/list', {
-                method: 'GET',
-                headers: {
-                    'questionIds': JSON.stringify(questionIds), // Serialize as JSON string
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            // Step 3: Parse the fetched data
-            const data: { isFillInTheBlank: boolean, question: string, questionId: number }[] = await response.json();
-
-            // Step 4: Combine answers and fetched data into modalData format
-            const combinedData = answers.map(answer => {
-                const matchingQuestion = data.find(q => q.questionId === answer.questionId);
-                return {
-                    answer: answer.answer,
-                    question: matchingQuestion?.question || '', // Use empty string if no match
-                    isFillInTheBlank: matchingQuestion?.isFillInTheBlank || false, // Default to false if no match
-                };
-            });
-
-            // Step 5: Update the modalData state
-            setModalData(combinedData);
-            setModalOpened(true)
-            
-
-            // console.log('Combined Data:', combinedData);
-        } catch (error) {
-            console.error('Error fetching curriculum questions:', error);
-        }
-    };
 
     const handleDelete = async () => {
         setDeleting(true);
@@ -89,7 +32,7 @@ export default function TeacherView({ curriculumId, classroomId, teacherCode, st
             if (!res.ok) throw new Error('Failed to delete classroom');
             toast.success('Classroom deleted');
             router.push('/');
-        } catch (e) {
+        } catch {
             toast.error('Error deleting classroom');
         } finally {
             setDeleting(false);
@@ -139,7 +82,7 @@ export default function TeacherView({ curriculumId, classroomId, teacherCode, st
                     </DialogContent>
                 </Dialog>
             </div>
-            <StudentTable classroomId={classroomId} showAnswers={showAnswers} />
+            <StudentTable classroomId={classroomId} setModalData={setModalData} setModalOpened={setModalOpened} />
             {modalOpened && <div className="backdrop-blur-sm w-screen h-screen fixed left-0 top-0 m-0 p-0 flex flex-col items-center justify-center bg-gray-100 bg-opacity-50" onClick={() => setModalOpened(false)}>
                 <div className="w-full max-w-2xl px-4 rounded-md p-6 shadow-md bg-white">
                     {modalData.map((v, i) => {

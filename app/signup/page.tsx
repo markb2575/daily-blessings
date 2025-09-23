@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from 'next/link'
@@ -52,15 +52,15 @@ export default function Signup() {
             toast.error("Passwords don't match.")
             return;
         }
-        const { data, error } = await authClient.signUp.email({
+        await authClient.signUp.email({
             'email': form.email,
             'password': form.password,
             'name': `${form.firstName} ${form.lastName}`
         }, {
-            onRequest: (ctx) => {
+            onRequest: () => {
                 setLoading(true)
             },
-            onSuccess: (ctx) => {
+            onSuccess: () => {
                 redirect("/onboarding")
             },
             onError: (ctx) => {
@@ -70,7 +70,7 @@ export default function Signup() {
         });
     };
 
-    const handleChange = (e: any) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setForm({
             ...form,
             [e.target.id]: e.target.value

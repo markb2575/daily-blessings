@@ -2,7 +2,7 @@
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Users, BookOpen } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { SetStateAction, Dispatch, useEffect, useState } from 'react'
 import { authClient } from '@/lib/auth-client'
 import { useRouter } from 'next/navigation'
 
@@ -13,7 +13,7 @@ export function ClassTable({
 }: {
     role: string
     isLoading: boolean
-    setIsLoading: Function
+    setIsLoading: Dispatch<SetStateAction<boolean>>
 }) {
     const [classes, setClasses] = useState<
         { classroomName: string; classroomId: string }[]
@@ -22,35 +22,36 @@ export function ClassTable({
     const session = authClient.useSession()
     const router = useRouter()
 
-    const fetchStudentCounts = async (classrooms: { classroomName: string; classroomId: string }[]) => {
-        const counts: Record<string, number> = {}
-        
-        for (const classroom of classrooms) {
-            try {
-                const response = await fetch('/api/classroom/student-count', {
-                    method: 'GET',
-                    headers: {
-                        classroomId: classroom.classroomId,
-                        userId: session.data?.session.userId || ''
-                    }
-                })
 
-                if (response.ok) {
-                    const data = await response.json()
-                    counts[classroom.classroomId] = data.studentCount
-                } else {
-                    counts[classroom.classroomId] = 0
-                }
-            } catch (error) {
-                console.error(`Error fetching student count for classroom ${classroom.classroomId}:`, error)
-                counts[classroom.classroomId] = 0
-            }
-        }
-        
-        setStudentCounts(counts)
-    }
 
     useEffect(() => {
+        const fetchStudentCounts = async (classrooms: { classroomName: string; classroomId: string }[]) => {
+            const counts: Record<string, number> = {}
+            
+            for (const classroom of classrooms) {
+                try {
+                    const response = await fetch('/api/classroom/student-count', {
+                        method: 'GET',
+                        headers: {
+                            classroomId: classroom.classroomId,
+                            userId: session.data?.session.userId || ''
+                        }
+                    })
+    
+                    if (response.ok) {
+                        const data = await response.json()
+                        counts[classroom.classroomId] = data.studentCount
+                    } else {
+                        counts[classroom.classroomId] = 0
+                    }
+                } catch (error) {
+                    console.error(`Error fetching student count for classroom ${classroom.classroomId}:`, error)
+                    counts[classroom.classroomId] = 0
+                }
+            }
+            
+            setStudentCounts(counts)
+        }
         const fetchClasses = async () => {
             try {
                 const response = await fetch('/api/classroom/list', {
@@ -80,7 +81,7 @@ export function ClassTable({
         if (session.data?.session.userId) {
             fetchClasses()
         }
-    }, [session.data?.session.userId, isLoading])
+    }, [session.data?.session.userId, isLoading, setIsLoading])
 
     if (isLoading) {
         return (
@@ -122,7 +123,7 @@ export function ClassTable({
 
     return (
         <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-            {classes.map((classroom, index) => (
+            {classes.map((classroom) => (
                 <Card
                     key={classroom.classroomId}
                     className='group h-48 cursor-pointer border-border/50 transition-all duration-200 hover:-translate-y-1 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/10'
