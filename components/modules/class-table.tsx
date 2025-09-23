@@ -18,8 +18,37 @@ export function ClassTable({
     const [classes, setClasses] = useState<
         { classroomName: string; classroomId: string }[]
     >([])
+    const [studentCounts, setStudentCounts] = useState<Record<string, number>>({})
     const session = authClient.useSession()
     const router = useRouter()
+
+    const fetchStudentCounts = async (classrooms: { classroomName: string; classroomId: string }[]) => {
+        const counts: Record<string, number> = {}
+        
+        for (const classroom of classrooms) {
+            try {
+                const response = await fetch('/api/classroom/student-count', {
+                    method: 'GET',
+                    headers: {
+                        classroomId: classroom.classroomId,
+                        userId: session.data?.session.userId || ''
+                    }
+                })
+
+                if (response.ok) {
+                    const data = await response.json()
+                    counts[classroom.classroomId] = data.studentCount
+                } else {
+                    counts[classroom.classroomId] = 0
+                }
+            } catch (error) {
+                console.error(`Error fetching student count for classroom ${classroom.classroomId}:`, error)
+                counts[classroom.classroomId] = 0
+            }
+        }
+        
+        setStudentCounts(counts)
+    }
 
     useEffect(() => {
         const fetchClasses = async () => {
@@ -37,6 +66,10 @@ export function ClassTable({
 
                 const data = await response.json()
                 setClasses(data.classrooms)
+                
+                // Fetch student counts for all classrooms
+                await fetchStudentCounts(data.classrooms)
+                
                 setIsLoading(false)
             } catch (error) {
                 console.error('Error fetching classes:', error)
@@ -117,7 +150,7 @@ export function ClassTable({
                                 <div className='flex items-center gap-1 pt-3'>
                                     <Users className='h-4 w-4' />
                                     <span>
-                                        num students
+                                        {studentCounts[classroom.classroomId] || 0} students
                                     </span>
                                 </div>
                                 <div className='flex items-center gap-1 pt-3'>
