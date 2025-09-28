@@ -134,7 +134,7 @@ export default function QAList({
     }
 
     return (
-        <Card className='mb-10 flex h-fit w-full flex-col gap-4 p-5 border-0 shadow-none md:w-1/2 md:border-2 md:border md:shadow-sm'>
+        <Card className='mb-10 flex h-fit w-full flex-col gap-4 p-5 border-0 shadow-none md:w-1/2 md:border md:shadow-sm'>
             <a
                 className='bibleref mb-1 text-sm text-gray-500'
                 target='_BLANK'
