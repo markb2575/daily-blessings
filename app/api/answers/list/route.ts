@@ -109,7 +109,7 @@ export async function GET(req: Request) {
         
                 const studentAnswers = daysOfWeek.reduce((acc, day, index) => {
                     const dayIndex = dayIndices[index];
-                    const questionIds = questionMap[dayIndex]; // Array of question IDs for the current day
+                    const questionIds = questionMap[dayIndex] ?? [];; // Array of question IDs for the current day
         
                     // console.log("questionIds", questionIds);
                     // console.log("answers", answerMap[member.userId]);

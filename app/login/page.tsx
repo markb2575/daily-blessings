@@ -70,7 +70,7 @@ export default function Login() {
     }
     return (
         <div className="font-Open_Sans min-h-screen flex items-center justify-center place-items-center h-screen flex-col w-screen">
-            <div className="w-[350px]">
+            <div className="w-[300px]">
                 <div className="text-3xl font-bold text-gray-700 text-center mb-8">Login</div>
                 <Button
                     className="w-full gap-4 font-bold border-gray-400 border bg-white hover:bg-gray-300"

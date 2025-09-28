@@ -57,7 +57,7 @@ export default function CreateClassroom({ refreshClasses }: { refreshClasses: ()
             })
             .then(data => {
                 setCodes(data)
-                refreshClasses()
+                // refreshClasses()
             })
     }
     const getCurriculums = async () => {
@@ -78,7 +78,14 @@ export default function CreateClassroom({ refreshClasses }: { refreshClasses: ()
     }, [])
 
     return (
-        <Dialog onOpenChange={resetForm}>
+        <Dialog   
+            onOpenChange={(open) => {
+                if (!open) {
+                // Only refresh classes when the dialog is actually closing
+                refreshClasses();
+                resetForm(); // reset the form when closing
+                }
+            }}>
             <DialogTrigger asChild>
                 <Button variant='outline'>
                     <div>Create</div>
@@ -123,7 +130,7 @@ export default function CreateClassroom({ refreshClasses }: { refreshClasses: ()
                                 ))}
                             </SelectContent>
                         </Select>
-                        <DialogFooter className='sm:justify-start'>
+                        <DialogFooter className='sm:justify-start flex gap-2'>
                             <DialogClose asChild>
                                 <Button type='button' variant='secondary'>
                                     Close

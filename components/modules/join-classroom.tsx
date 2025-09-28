@@ -71,7 +71,7 @@ export default function JoinClassroom({ role, refreshClasses }: { role: string, 
                             value={code}
                             onChange={e => setCode(e.target.value)}
                         />
-                <DialogFooter className='sm:justify-start'>
+                <DialogFooter className='sm:justify-start flex gap-2'>
                     <DialogClose asChild>
                         <Button type='button' variant='secondary'>
                             Close

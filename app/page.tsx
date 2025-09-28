@@ -70,19 +70,22 @@ export default function Home() {
                     left={
                         <div className='flex items-center gap-4'>
                             <div className='size-8 rounded-md bg-gray-200' />
-                            <div className='cursor-default text-xl font-medium'>
-                                Daily Blessings
-                            </div>
                         </div>
                     }
                     right={
-                        <div className='flex items-center gap-4'>
+                        <div className='flex items-center gap-3'>
                             {/* <button className='hover:scale-200 rounded bg-yellow-200 px-2 py-2 text-[15px] font-semibold text-yellow-500 transition duration-200 hover:-translate-y-1 hover:bg-yellow-500 hover:text-white'>
                                     Blessings Shop
                                 </button> */}
 
-                            {role === 'teacher' ? <CreateClassroom refreshClasses={refreshClasses} /> : null}
+                            {role === 'teacher' ? 
+                            <div className='flex gap-1'>
+                                <CreateClassroom refreshClasses={refreshClasses} />
+                                <JoinClassroom role={role} refreshClasses={refreshClasses} />
+                            </div> : 
                             <JoinClassroom role={role} refreshClasses={refreshClasses} />
+                            }
+                            
 
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
@@ -125,10 +128,7 @@ export default function Home() {
                 />
 
                 <div className='mx-10 mt-24 w-full'>
-                    <div className='mb-8 cursor-default space-y-20 text-2xl font-semibold'>
-                        Welcome, {session.data?.user.name}! You are a {role}
-                    </div>
-                    <ClassTable role={role} isLoading={isLoading} setIsLoading={setIsLoading}/>
+                    <ClassTable role={role} isLoading={isLoading} setIsLoading={setIsLoading} refreshClasses={refreshClasses}/>
                 </div>
             </div>
         )

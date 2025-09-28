@@ -101,9 +101,6 @@ export default function Classroom({
                 left={
                     <div className='flex items-center gap-4 hover:cursor-pointer hover:opacity-80' onClick={() => router.push("/")}>
                         <div className='size-8 rounded-md bg-gray-200' />
-                        <div className='cursor-default text-xl font-medium hover:cursor-pointer'>
-                            Daily Blessings
-                        </div>
                     </div>
                 }
                 right={
@@ -146,7 +143,7 @@ export default function Classroom({
                 }
 
             />
-            <div className='flex mt-24 w-full justify-center'>
+            <main className='flex mt-24 w-full justify-center'>
                 {role === "student" ? (
                     <StudentView curriculumId={classroomData.curriculumId} classroomId={Number(classroomId)} dayIndex={classroomData.dayIndex}/>
                 ) : (
@@ -156,7 +153,7 @@ export default function Classroom({
                         studentCode={classroomData.studentCode}
                     />
                 )}
-            </div>
+            </main>
             <Script 
                 src="https://www.biblegateway.com/public/link-to-us/tooltips/bglinks.js" 
                 strategy="afterInteractive"
