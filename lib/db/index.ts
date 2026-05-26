@@ -18,7 +18,13 @@ function createDatabaseConnection() {
         throw new Error('Missing DATABASE_URL');
     }
 
-    const poolConnection = mysql.createPool(process.env.DATABASE_URL);
+    const poolConnection = mysql.createPool({
+        uri: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
+    });
+    
     return drizzle(poolConnection, { schema, mode: "default" });
 }
 
