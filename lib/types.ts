@@ -19,6 +19,7 @@ export type TableData = {
 } | null
 
 export type StudentData = {
+    studentId: string,
     studentName: string,
     mon: DayData,
     tues: DayData,

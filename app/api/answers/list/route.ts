@@ -140,6 +140,7 @@ export async function GET(req: Request) {
                 }, {} as Record<string, StudentAnswer>);
         
                 return {
+                    studentId: member.userId,
                     studentName: user?.name || "Unknown",
                     ...studentAnswers,
                 };

@@ -2,6 +2,21 @@ import { db } from '@/lib/db'
 import { classroom, classroom_member } from '@/lib/db/schema'
 import { eq, and } from 'drizzle-orm'
 
+export async function DELETE(req: Request) {
+    const classroomId = req.headers.get('classroomId')
+    const studentId = req.headers.get('studentId')
+    if (!classroomId || !studentId) {
+        return Response.json({ error: 'Missing headers' }, { status: 400 })
+    }
+    await db.delete(classroom_member).where(
+        and(
+            eq(classroom_member.classroomId, Number(classroomId)),
+            eq(classroom_member.userId, studentId)
+        )
+    )
+    return Response.json({ success: true }, { status: 200 })
+}
+
 export async function POST(req: Request) {
     const data = await req.json()
     const userId = data.userId

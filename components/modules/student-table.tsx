@@ -11,6 +11,7 @@ import {
 import { ArrowLeft, ArrowRight, Calendar, Check, X } from 'lucide-react'
 import { ModalData, StudentData, TableData } from '@/lib/types'
 import { Button } from '../ui/button'
+import { useRouter } from 'next/navigation'
 
 export default function StudentTable({
     classroomId,
@@ -21,6 +22,7 @@ export default function StudentTable({
     setModalData: Dispatch<SetStateAction<ModalData>>
     setModalOpened: Dispatch<SetStateAction<boolean>>
 }) {
+    const router = useRouter()
     const [tableData, setTableData] = useState<TableData>(null)
     const [tablePage, setTablePage] = useState(0)
     const todayCol = tablePage === 0 ? new Date().getDay() : -1
@@ -208,9 +210,12 @@ export default function StudentTable({
                                             key={index}
                                             className='border-border transition-colors hover:bg-accent/50'
                                         >
-                                            <TableCell className="text-center font-medium text-foreground">
-                                            {row.studentName.split(" ")[0]}{" "}
-                                            {row.studentName.split(" ")[1]?.[0]}.
+                                            <TableCell
+                                                className="cursor-pointer text-center font-medium text-foreground hover:text-brand-blue hover:underline"
+                                                onClick={() => router.push(`/classroom/${classroomId}/student/${row.studentId}`)}
+                                            >
+                                                {row.studentName.split(" ")[0]}{" "}
+                                                {row.studentName.split(" ")[1]?.[0]}.
                                             </TableCell>
                                             {(['sun','mon','tues','wed','thurs','fri','sat'] as const).map((day, col) => (
                                                 <TableCell
