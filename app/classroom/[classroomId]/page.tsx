@@ -145,7 +145,7 @@ export default function Classroom({
             />
             <main className='flex mt-24 w-full justify-center'>
                 {role === "student" ? (
-                    <StudentView curriculumId={classroomData.curriculumId} classroomId={Number(classroomId)} dayIndex={classroomData.dayIndex}/>
+                    <StudentView curriculumId={classroomData.curriculumId} classroomId={Number(classroomId)} dayIndex={Math.floor((Date.now() - new Date(classroomData.createdAt).getTime()) / (1000 * 60 * 60 * 24))}/>
                 ) : (
                     <TeacherView 
                         classroomId={Number(classroomId)} 

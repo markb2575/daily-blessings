@@ -21,9 +21,9 @@ export async function GET(req: Request) {
         }
 
         // Step 2: Calculate the day indices for the current week
-        const createdAtDate = new Date(classroom.createdAt); // Classroom creation date
-        const currentDayIndex = classroom.dayIndex + (Number(tablePage) * 7); 
-        // Current day index from the classroom
+        const createdAtDate = new Date(classroom.createdAt);
+        const daysSinceCreation = Math.floor((Date.now() - createdAtDate.getTime()) / (1000 * 60 * 60 * 24));
+        const currentDayIndex = daysSinceCreation + (Number(tablePage) * 7);
         // Helper function to get the start of the week (Monday)
         function getStartOfWeek(date: Date) {
             const day = date.getDay(); // 0 for Sunday, 1 for Monday, ..., 6 for Saturday

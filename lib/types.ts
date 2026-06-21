@@ -70,7 +70,7 @@ export type ClassroomData = {
     classroomId: number,
     curriculumId: number,
     classroomName: string,
-    studentCode: string, 
+    studentCode: string,
     teacherCode: string | '',
-    dayIndex: number
+    createdAt: string,
 } | null

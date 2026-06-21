@@ -41,7 +41,6 @@ CREATE TABLE `classroom` (
     `studentCode` varchar(9) NOT NULL,
     `teacherCode` varchar(9) NOT NULL,
     `classroomName` varchar(24) NOT NULL,
-    `dayIndex` int NOT NULL DEFAULT (0),
     `createdAt` timestamp NOT NULL DEFAULT (now()),
 	CONSTRAINT `classroom_classroomId` PRIMARY KEY(`classroomId`)
 );

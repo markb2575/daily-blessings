@@ -47,7 +47,6 @@ export const classroom = mysqlTable("classroom", {
     classroomName: varchar('classroomName', { length: 24}).notNull(),
     studentCode: varchar('studentCode', { length: 7 }).notNull(),
     teacherCode: varchar('teacherCode', { length: 7 }).notNull(),
-    dayIndex: int("dayIndex").notNull().default(0),
     createdAt: timestamp('createdAt').notNull().defaultNow(),
 });
 
