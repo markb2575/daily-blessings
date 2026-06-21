@@ -34,8 +34,12 @@ jobs:
           cp -r public ./standalone/public
           cp -r .next/static ./standalone/.next/static
 
+      # Zip the CONTENTS of ./standalone (note the `.`), not the folder itself,
+      # so server.js sits at the root of the archive -> lands at wwwroot/server.js
       - name: Zip artifact for deployment
-        run: zip -r release.zip ./standalone
+        run: |
+          cd standalone
+          zip -r ../release.zip .
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -56,9 +60,6 @@ jobs:
         with:
           name: node-app
 
-      - name: Unzip artifact
-        run: unzip release.zip
-
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -66,9 +67,10 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_461CD26D2A17437399B39E9937D8D19E }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_107B9E6475F04A49A81B8877FB1624AC }}
 
+      # Deploy the zip directly — server.js is at its root, so no unzip step
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'dailyblessings'
           slot-name: 'Production'
-          package: ./standalone
+          package: release.zip
