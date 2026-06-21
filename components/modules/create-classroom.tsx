@@ -30,11 +30,13 @@ export default function CreateClassroom({ refreshClasses }: { refreshClasses: ()
     const [curriculums, setCurriculums] = useState<curriculums>([])
     const [curriculumId, setCurriculumId] = useState('')
     const [classroomName, setClassroomName] = useState('')
+    const [created, setCreated] = useState(false)
     const session = authClient.useSession()
     const resetForm = () => {
         setCodes(undefined)
         setCurriculumId('')
         setClassroomName('')
+        setCreated(false)
     }
     const createClassroom = async () => {
         if (curriculumId === '' || classroomName === '') {
@@ -57,7 +59,7 @@ export default function CreateClassroom({ refreshClasses }: { refreshClasses: ()
             })
             .then(data => {
                 setCodes(data)
-                // refreshClasses()
+                setCreated(true)
             })
     }
     const getCurriculums = async () => {
@@ -81,9 +83,8 @@ export default function CreateClassroom({ refreshClasses }: { refreshClasses: ()
         <Dialog   
             onOpenChange={(open) => {
                 if (!open) {
-                // Only refresh classes when the dialog is actually closing
-                refreshClasses();
-                resetForm(); // reset the form when closing
+                    if (created) refreshClasses();
+                    resetForm();
                 }
             }}>
             <DialogTrigger asChild>
@@ -186,11 +187,7 @@ export default function CreateClassroom({ refreshClasses }: { refreshClasses: ()
                         </DialogDescription>
                         <DialogFooter className='sm:justify-start'>
                             <DialogClose asChild>
-                                <Button
-                                    type='button'
-                                    variant='secondary'
-                                    onClick={resetForm}
-                                >
+                                <Button type='button' variant='secondary'>
                                     Close
                                 </Button>
                             </DialogClose>
