@@ -20,7 +20,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className='max-w-sm font-Open_Sans'>
+            <DialogContent aria-describedby={undefined} className='max-w-sm font-Open_Sans'>
                 <DialogHeader>
                     <DialogTitle>Settings</DialogTitle>
                 </DialogHeader>

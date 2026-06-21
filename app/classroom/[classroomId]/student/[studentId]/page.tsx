@@ -8,11 +8,11 @@ import { authClient } from '@/lib/auth-client'
 import Navbar from '@/components/ui/navbar'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { SettingsDialog } from '@/components/modules/settings-dialog'
-import { ArrowLeft, AlertTriangle, Flame, BookOpen, CheckCircle2, Trophy, User, LogOut, Settings } from 'lucide-react'
+import { ArrowLeft, Flame, BookOpen, CheckCircle2, Trophy, User, LogOut, Settings } from 'lucide-react'
 
 type StudentStats = {
     studentName: string
@@ -218,10 +218,16 @@ export default function StudentDetailPage({
 
                 {/* Danger zone */}
                 <div className='border-t border-border pt-5'>
+                    <p className='mb-1 text-sm font-medium text-foreground'>Remove from class</p>
                     <p className='mb-3 text-xs text-muted-foreground'>
-                        Removing a student revokes their access but does not delete their answers.
+                        Removing a student revokes their access.
                     </p>
-                    <Button variant='destructive' size='sm' onClick={() => setRemoveOpen(true)}>
+                    <Button
+                        variant='outline'
+                        size='sm'
+                        onClick={() => setRemoveOpen(true)}
+                        className='border-destructive/40 text-destructive hover:border-destructive/60 hover:bg-destructive/10 hover:text-destructive'
+                    >
                         Remove from class
                     </Button>
                 </div>
@@ -232,15 +238,12 @@ export default function StudentDetailPage({
             <Dialog open={removeOpen} onOpenChange={setRemoveOpen}>
                 <DialogContent className='max-w-sm'>
                     <DialogHeader>
-                        <DialogTitle className='flex items-center gap-2'>
-                            <AlertTriangle className='h-5 w-5 text-destructive' />
-                            Remove student?
-                        </DialogTitle>
+                        <DialogTitle>Remove student?</DialogTitle>
                     </DialogHeader>
-                    <p className='text-sm text-muted-foreground'>
+                    <DialogDescription>
                         <span className='font-semibold text-foreground'>{stats.studentName}</span> will be removed from
-                        this class. Their answers will not be deleted, but they will lose access.
-                    </p>
+                        this class.
+                    </DialogDescription>
                     <DialogFooter className='gap-2'>
                         <DialogClose asChild>
                             <Button variant='outline' size='sm'>Cancel</Button>
