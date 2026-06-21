@@ -12,6 +12,7 @@ import React from 'react'
 import { useRouter } from 'next/navigation'
 import Script from 'next/script'
 import { ClassroomData } from '@/lib/types'
+import { SettingsDialog } from '@/components/modules/settings-dialog'
 
 
 declare global {
@@ -42,6 +43,7 @@ export default function Classroom({
         redirect('/login')
     }
     const [userInClass, setUserInClass] = useState(false)
+    const [settingsOpen, setSettingsOpen] = useState(false)
 
 
     useEffect(() => {
@@ -105,13 +107,13 @@ export default function Classroom({
             <Navbar
                 left={
                     <div className='flex items-center gap-4 hover:cursor-pointer hover:opacity-80' onClick={() => router.push("/")}>
-                        <div className='size-8 rounded-md bg-gray-200' />
+                        <div className='size-8 rounded-md bg-muted' />
                     </div>
                 }
                 right={
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Avatar className='size-11 cursor-pointer items-center justify-center border-2 border-white bg-gray-100 transition ease-in hover:border-gray-200'>
+                            <Avatar className='size-11 cursor-pointer items-center justify-center border-2 border-background bg-muted transition ease-in hover:border-border'>
                                 <AvatarImage
                                     src={
                                         session.data?.user.image
@@ -122,22 +124,22 @@ export default function Classroom({
                                 <User />
                             </Avatar>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent className='absolute -right-5 -top-1 w-40 bg-white font-Open_Sans font-medium'>
+                        <DropdownMenuContent className='absolute -right-5 -top-1 w-40 font-Open_Sans font-medium'>
                             <DropdownMenuLabel>
                                 {session.data?.user.name}
                             </DropdownMenuLabel>
-                            <DropdownMenuSeparator className='bg-gray-200' />
+                            <DropdownMenuSeparator />
                             <DropdownMenuGroup>
-                                <DropdownMenuItem className='cursor-pointer focus:bg-gray-100'>
+                                <DropdownMenuItem className='cursor-pointer' onSelect={() => setTimeout(() => setSettingsOpen(true), 0)}>
                                     <Settings />
                                     <span>Settings</span>
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>
-                            <DropdownMenuSeparator className='bg-gray-200' />
+                            <DropdownMenuSeparator />
                             <DropdownMenuGroup>
                                 <DropdownMenuItem
-                                    onClick={handleSignOut}
-                                    className='cursor-pointer focus:bg-gray-100 focus:text-red-500'
+                                    onSelect={handleSignOut}
+                                    className='cursor-pointer focus:text-red-500'
                                 >
                                     <LogOut />
                                     <span>Sign out</span>
@@ -159,8 +161,8 @@ export default function Classroom({
                     />
                 )}
             </main>
-            <Script 
-                src="https://www.biblegateway.com/public/link-to-us/tooltips/bglinks.js" 
+            <Script
+                src="https://www.biblegateway.com/public/link-to-us/tooltips/bglinks.js"
                 strategy="afterInteractive"
                 onLoad={() => {
                     BGLinks.version = "NKJV";
@@ -168,6 +170,7 @@ export default function Classroom({
                     BGLinks.apocrypha = true;
                 }}
             />
+            <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
         </div>
     )
 }

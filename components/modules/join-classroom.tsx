@@ -62,12 +62,11 @@ export default function JoinClassroom({ role, refreshClasses }: { role: string, 
             </DialogTrigger>
             <DialogContent aria-describedby={undefined}>
                 <DialogTitle>Join Classroom</DialogTitle>
-                <Label htmlFor='name' className='text-neutral-700'>
-                            Class Code  
+                <Label htmlFor='name'>
+                            Class Code
                         </Label>
                         <Input
                             id='name'
-                            className='bg-white text-neutral-700'
                             value={code}
                             onChange={e => setCode(e.target.value)}
                         />

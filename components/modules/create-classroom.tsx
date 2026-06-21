@@ -96,18 +96,16 @@ export default function CreateClassroom({ refreshClasses }: { refreshClasses: ()
                 {!codes ? (
                     <>
                         <DialogTitle>Create Classroom</DialogTitle>
-                        <Label htmlFor='name' className='text-neutral-700'>
+                        <Label htmlFor='name'>
                             Class Name
                         </Label>
                         <Input
                             id='name'
-                            className='bg-white text-neutral-700'
                             value={classroomName}
                             onChange={e => setClassroomName(e.target.value)}
                         />
                         <Label
                             htmlFor='curriculum'
-                            className='text-neutral-700'
                         >
                             Curriculum
                         </Label>

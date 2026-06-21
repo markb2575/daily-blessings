@@ -221,7 +221,7 @@ export default function StudentTable({
                                                     {row[day].hasQuestions && (
                                                         row[day].completed
                                                             ? <Check className='text-green-500 mx-auto h-5 w-5' />
-                                                            : <X className='mx-auto h-5 w-5 text-black/50' />
+                                                            : <X className='mx-auto h-5 w-5 text-foreground/50' />
                                                     )}
                                                 </TableCell>
                                             ))}

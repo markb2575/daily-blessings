@@ -18,6 +18,7 @@ import {
 import CreateClassroom from '@/components/modules/create-classroom'
 import JoinClassroom from '@/components/modules/join-classroom'
 import { ClassTable } from '@/components/modules/class-table'
+import { SettingsDialog } from '@/components/modules/settings-dialog'
 
 export default function Home() {
     const [role, setRole] = useState('none')
@@ -59,6 +60,7 @@ export default function Home() {
 
 
     const [isLoading, setIsLoading] = useState(true)
+    const [settingsOpen, setSettingsOpen] = useState(false)
     const refreshClasses = () => {
         setIsLoading(prev => !prev); // Toggle state to trigger useEffect
     };
@@ -69,7 +71,7 @@ export default function Home() {
                 <Navbar
                     left={
                         <div className='flex items-center gap-4'>
-                            <div className='size-8 rounded-md bg-gray-200' />
+                            <div className='size-8 rounded-md bg-muted' />
                         </div>
                     }
                     right={
@@ -89,7 +91,7 @@ export default function Home() {
 
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Avatar className='size-11 cursor-pointer items-center justify-center border-2 border-white bg-gray-100 transition ease-in hover:border-gray-200'>
+                                    <Avatar className='size-11 cursor-pointer items-center justify-center border-2 border-background bg-muted transition ease-in hover:border-border'>
                                         <AvatarImage
                                             src={
                                                 session.data?.user.image
@@ -100,22 +102,22 @@ export default function Home() {
                                         <User />
                                     </Avatar>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent className='absolute -right-5 -top-1 w-40 bg-white font-Open_Sans font-medium'>
+                                <DropdownMenuContent className='absolute -right-5 -top-1 w-40 font-Open_Sans font-medium'>
                                     <DropdownMenuLabel>
                                         {session.data?.user.name}
                                     </DropdownMenuLabel>
-                                    <DropdownMenuSeparator className='bg-gray-200' />
+                                    <DropdownMenuSeparator />
                                     <DropdownMenuGroup>
-                                        <DropdownMenuItem className='cursor-pointer focus:bg-gray-100'>
+                                        <DropdownMenuItem className='cursor-pointer' onSelect={() => setTimeout(() => setSettingsOpen(true), 0)}>
                                             <Settings />
                                             <span>Settings</span>
                                         </DropdownMenuItem>
                                     </DropdownMenuGroup>
-                                    <DropdownMenuSeparator className='bg-gray-200' />
+                                    <DropdownMenuSeparator />
                                     <DropdownMenuGroup>
                                         <DropdownMenuItem
-                                            onClick={handleSignOut}
-                                            className='cursor-pointer focus:bg-gray-100 focus:text-red-500'
+                                            onSelect={handleSignOut}
+                                            className='cursor-pointer focus:text-red-500'
                                         >
                                             <LogOut />
                                             <span>Sign out</span>
@@ -130,6 +132,7 @@ export default function Home() {
                 <div className='mx-10 mt-24 w-full'>
                     <ClassTable role={role} isLoading={isLoading} setIsLoading={setIsLoading} refreshClasses={refreshClasses}/>
                 </div>
+                <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
             </div>
         )
     } else {
