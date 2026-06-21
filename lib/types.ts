@@ -13,7 +13,9 @@ export type TeacherViewProps = {
 export type TableData = {
     students: StudentData[],
     dates: string[],
-    indices: number[]
+    indices: number[],
+    totalWeeks: number,
+    firstWeekStart: number,
 } | null
 
 export type StudentData = {
@@ -29,6 +31,7 @@ export type StudentData = {
 
 export type DayData = {
     completed: boolean,
+    hasQuestions: boolean,
     answers: { answer: string; questionId: number }[];
 }
 

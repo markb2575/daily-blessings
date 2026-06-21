@@ -1,4 +1,4 @@
-import { eq, and, inArray } from "drizzle-orm";
+import { eq, and, inArray, max } from "drizzle-orm";
 import { db } from "@/lib/db"; // Assuming you have a Drizzle ORM database connection setup
 import { schema } from "@/lib/db/schema";
 import { member } from "@/lib/types";
@@ -20,34 +20,33 @@ export async function GET(req: Request) {
             return new Response(JSON.stringify({ error: "Classroom not found" }), { status: 404 });
         }
 
-        // Step 2: Calculate the day indices for the current week
-        const createdAtDate = new Date(classroom.createdAt);
-        const daysSinceCreation = Math.floor((Date.now() - createdAtDate.getTime()) / (1000 * 60 * 60 * 24));
-        const currentDayIndex = daysSinceCreation + (Number(tablePage) * 7);
-        // Helper function to get the start of the week (Monday)
-        function getStartOfWeek(date: Date) {
-            const day = date.getDay(); // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
-            const diff = date.getDate() - day; // Calculate the difference to get to Sunday
-            return new Date(date.setDate(diff)); // Set the date to the start of the week
-        }
+        // Step 2: Calculate the day indices for the current week — use UTC throughout
+        // to avoid local-timezone getDate()/setDate() mismatches with the UTC-based day count.
+        const createdUTC = Date.UTC(
+            new Date(classroom.createdAt).getUTCFullYear(),
+            new Date(classroom.createdAt).getUTCMonth(),
+            new Date(classroom.createdAt).getUTCDate()
+        );
+        const now = new Date();
+        const todayUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
 
-        // Get the Sunday of the current week
-        const adjustedDate = new Date(createdAtDate);
-        adjustedDate.setDate(createdAtDate.getDate() + currentDayIndex);
-        const startOfWeek = getStartOfWeek(adjustedDate);
-        // Calculate the dates for each day of the week (Monday to Sunday)
-        const daysOfWeek: DayOfWeek[] = ["mon", "tues", "wed", "thurs", "fri", "sat", "sun"];
-        const dayDates = daysOfWeek.map((_, index) => {
-            const dayDate = new Date(startOfWeek);
-            dayDate.setDate(startOfWeek.getDate() + index); // Add days to Monday
-            return dayDate;
-        });
-        // Calculate the dayIndex for each day by comparing with createdAtDate
-        const dayIndices = dayDates.map((dayDate) => {
-            const timeDifference = dayDate.getTime() - createdAtDate.getTime();
-            const dayDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24)); // Difference in days
-            return dayDifference;
-        });
+        const [maxDayRow] = await db
+            .select({ maxDay: max(schema.curriculum_day.dayIndex) })
+            .from(schema.curriculum_day)
+            .where(eq(schema.curriculum_day.curriculumId, classroom.curriculumId));
+        const totalWeeks = Math.ceil(((maxDayRow?.maxDay ?? 0) + 1) / 7);
+
+        // Start of the displayed week (Sunday), offset by tablePage weeks
+        const weekStartUTC = todayUTC + (Number(tablePage) * 7 * 24 * 60 * 60 * 1000);
+        const weekStartDate = new Date(weekStartUTC);
+        const sundayOffset = weekStartDate.getUTCDay(); // days since Sunday
+        const startOfWeekUTC = weekStartUTC - sundayOffset * 24 * 60 * 60 * 1000;
+
+        const daysOfWeek: DayOfWeek[] = ["sun", "mon", "tues", "wed", "thurs", "fri", "sat"];
+        const dayDates = daysOfWeek.map((_, index) => new Date(startOfWeekUTC + index * 24 * 60 * 60 * 1000));
+        const dayIndices = dayDates.map(dayDate =>
+            Math.floor((dayDate.getTime() - createdUTC) / (1000 * 60 * 60 * 24))
+        );
         // Step 3: Fetch questionIds for each day
         const questions = await db.query.curriculum_questions.findMany({
             where: and(
@@ -92,6 +91,7 @@ export async function GET(req: Request) {
         // Step 6: Format the data into the desired JSON structure
         type StudentAnswer = {
             completed: boolean;
+            hasQuestions: boolean;
             answers: { answer: string; questionId: number }[];
         };
         type DayOfWeek = "mon" | "tues" | "wed" | "thurs" | "fri" | "sat" | "sun";
@@ -109,37 +109,32 @@ export async function GET(req: Request) {
         
                 const studentAnswers = daysOfWeek.reduce((acc, day, index) => {
                     const dayIndex = dayIndices[index];
-                    const questionIds = questionMap[dayIndex] ?? [];; // Array of question IDs for the current day
-        
-                    // console.log("questionIds", questionIds);
-                    // console.log("answers", answerMap[member.userId]);
-                    // console.log("acc", acc);
-        
-                    // Check if answerMap[member.userId] is undefined or keys don't match questionIds
-                    if (
-                        !answerMap[member.userId] || // Check if answerMap[member.userId] is undefined
-                        !questionIds.every((id) => id in answerMap[member.userId]!) // Check if all questionIds exist as keys
-                    ) {
-                        acc[day] = {
-                            completed: false,
-                            answers: [], // No answers if the check fails
-                        };
+                    const questionIds = questionMap[dayIndex] ?? [];
+
+                    if (questionIds.length === 0) {
+                        acc[day] = { completed: false, hasQuestions: false, answers: [] };
                         return acc;
                     }
-        
-                    // Extract and format answers with their corresponding questionIds
+
+                    if (
+                        !answerMap[member.userId] ||
+                        !questionIds.every((id) => id in answerMap[member.userId]!)
+                    ) {
+                        acc[day] = { completed: false, hasQuestions: true, answers: [] };
+                        return acc;
+                    }
+
                     const answers = questionIds
                         .map((id) => {
-                            const answer = answerMap[member.userId]?.[id]; // Get the answer for the questionId
-                            return answer
-                                ? { answer, questionId: id } // Pair the answer with its questionId
-                                : null; // Exclude invalid answers
+                            const answer = answerMap[member.userId]?.[id];
+                            return answer ? { answer, questionId: id } : null;
                         })
-                        .filter((item): item is { answer: string; questionId: number } => item !== null); // Filter out nulls and refine type
-        
+                        .filter((item): item is { answer: string; questionId: number } => item !== null);
+
                     acc[day] = {
-                        completed: answers.length > 0, // Completed if there are valid answers
-                        answers: answers, // Array of { answer, questionId }
+                        completed: answers.length > 0,
+                        hasQuestions: true,
+                        answers,
                     };
                     return acc;
                 }, {} as Record<string, StudentAnswer>);
@@ -151,10 +146,13 @@ export async function GET(req: Request) {
             })
         );
         // console.log("students", students)
+        const firstWeekStart = -(new Date(createdUTC).getUTCDay());
         const table = {
             students,
-            dates: dayDates.map((val) => val.toLocaleDateString()),
-            indices: dayIndices
+            dates: dayDates.map((val) => `${val.getUTCMonth() + 1}/${val.getUTCDate()}/${val.getUTCFullYear()}`),
+            indices: dayIndices,
+            totalWeeks,
+            firstWeekStart,
         }
         // console.log(table.indices)
         return new Response(JSON.stringify(table), { status: 200 });

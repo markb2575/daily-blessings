@@ -94,6 +94,11 @@ export default function Classroom({
 
     if (userInClass === false || classroomData === null || role === 'none') return null
 
+    const today = new Date();
+    const created = new Date(classroomData.createdAt);
+    const todayUTC = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+    const createdUTC = Date.UTC(created.getUTCFullYear(), created.getUTCMonth(), created.getUTCDate());
+    const currentDayIndex = Math.floor((todayUTC - createdUTC) / (1000 * 60 * 60 * 24));
 
     return (
         <div className='flex min-h-screen font-Open_Sans'>
@@ -145,7 +150,7 @@ export default function Classroom({
             />
             <main className='flex mt-24 w-full justify-center'>
                 {role === "student" ? (
-                    <StudentView curriculumId={classroomData.curriculumId} classroomId={Number(classroomId)} dayIndex={Math.floor((Date.now() - new Date(classroomData.createdAt).getTime()) / (1000 * 60 * 60 * 24))}/>
+                    <StudentView curriculumId={classroomData.curriculumId} classroomId={Number(classroomId)} dayIndex={currentDayIndex}/>
                 ) : (
                     <TeacherView 
                         classroomId={Number(classroomId)} 
