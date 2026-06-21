@@ -71,9 +71,9 @@ export default function Login() {
     return (
         <div className="font-Open_Sans min-h-screen flex items-center justify-center place-items-center h-screen flex-col w-screen">
             <div className="w-[300px]">
-                <div className="text-3xl font-bold text-gray-700 text-center mb-8">Login</div>
+                <div className="text-3xl font-bold text-foreground text-center mb-8">Login</div>
                 <Button
-                    className="w-full gap-4 font-bold border-gray-400 border bg-white hover:bg-gray-300"
+                    className="w-full gap-4 font-bold border border-border bg-background text-foreground hover:bg-accent"
                     onClick={handleGoogleLogin}
                 >
                     <svg
@@ -99,34 +99,32 @@ export default function Login() {
                             d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0C79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"
                         />
                     </svg>
-                    <div className="text-gray-700">Login with Google</div>
-
+                    <div>Login with Google</div>
                 </Button>
                 <div className="flex items-center gap-3 my-5">
-                    <div className="h-px flex-1 bg-gray-300"></div>
-                    <div className="text-gray-700">OR</div>
-                    <div className="h-px flex-1 bg-gray-300"></div>
+                    <div className="h-px flex-1 bg-border"></div>
+                    <div className="text-muted-foreground text-sm">OR</div>
+                    <div className="h-px flex-1 bg-border"></div>
                 </div>
                 <form onSubmit={handleEmailLogin} className="flex flex-col">
-                    <Label className="text-gray-700 mb-2"  htmlFor="email">Email</Label>
+                    <Label className="mb-2" htmlFor="email">Email</Label>
                     <Input
                         id="email"
                         placeholder="user@example.com"
-                        className="border-gray-400 text-gray-700 mb-4 bg-white"
+                        className="mb-4"
                         onChange={handleChange}
                     />
-                    <Label className="text-gray-700 mb-2"  htmlFor="password">Password</Label>
+                    <Label className="mb-2" htmlFor="password">Password</Label>
                     <Input
                         id="password"
                         type="password"
                         placeholder="password"
-                        className="border-gray-400 text-gray-700 mb-4 bg-white"
+                        className="mb-4"
                         onChange={handleChange}
                     />
                     <div className="flex items-center gap-2 mb-4">
                         <Checkbox
                             id="rememberMe"
-                            className="border-gray-400 bg-white"
                             onCheckedChange={(checked: boolean) =>
                                 setForm({
                                   ...form,
@@ -134,7 +132,7 @@ export default function Login() {
                                 })
                             }
                         />
-                        <Label className="text-gray-700"  htmlFor="rememberMe">Remember me</Label>
+                        <Label htmlFor="rememberMe">Remember me</Label>
                     </div>
                     <Button
                         type="submit"
@@ -144,7 +142,7 @@ export default function Login() {
                     </Button>
                 </form>
                 <div className="flex-row flex gap-2 mt-5 text-sm">
-                    <div>Need an account?</div><Link href={"/signup"} className="font-bold text-blue-700">Signup</Link>
+                    <div>Need an account?</div><Link href={"/signup"} className="font-bold text-blue-500">Signup</Link>
                 </div>
             </div>
         </div>

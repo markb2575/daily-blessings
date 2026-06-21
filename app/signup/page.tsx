@@ -43,7 +43,6 @@ export default function Signup() {
 
     const handleEmailSignup = async (event: React.FormEvent) => {
         event.preventDefault();
-        // console.log(form.email)
         if (form.email === "" || form.password === "" || form.firstName === "" || form.lastName === "" || form.confirmedPassword === "") {
             toast.error("Please fill in all fields.")
             return;
@@ -79,9 +78,9 @@ export default function Signup() {
     return (
         <div className="font-Open_Sans min-h-screen flex items-center justify-center place-items-center h-screen flex-col w-screen">
             <div className="w-[300px]">
-                <div className="text-3xl font-bold text-neutral-700 text-center mb-8">Signup</div>
+                <div className="text-3xl font-bold text-foreground text-center mb-8">Signup</div>
                 <Button
-                    className="w-full gap-4 font-bold border-neutral-400 border bg-white hover:bg-gray-300"
+                    className="w-full gap-4 font-bold border border-border bg-background text-foreground hover:bg-accent"
                     onClick={handleGoogleSignup}
                 >
                     <svg
@@ -107,60 +106,59 @@ export default function Signup() {
                             d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0C79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"
                         />
                     </svg>
-                    <div className="text-neutral-700">Signup with Google</div>
-
+                    <div>Signup with Google</div>
                 </Button>
                 <div className="flex items-center gap-3 my-5">
-                    <div className="h-px flex-1 bg-neutral-300"></div>
-                    <div className="text-neutral-700">OR</div>
-                    <div className="h-px flex-1 bg-neutral-300"></div>
+                    <div className="h-px flex-1 bg-border"></div>
+                    <div className="text-muted-foreground text-sm">OR</div>
+                    <div className="h-px flex-1 bg-border"></div>
                 </div>
                 <form onSubmit={handleEmailSignup} className="flex flex-col">
-                <div className="grid grid-cols-2 gap-4">
-						<div className="grid">
-							<Label htmlFor="firstName" className="text-neutral-700 mb-2">First name</Label>
-							<Input
-                                className="border-neutral-400 text-neutral-700 mb-4 bg-white"
-								id="firstName"
-								placeholder="John"
-								required
-								onChange={handleChange}
-							/>
-						</div>
-						<div className="grid">
-							<Label htmlFor="lastName" className="text-neutral-700 mb-2">Last name</Label>
-							<Input
-                                className="border-neutral-400 text-neutral-700 mb-4 bg-white"
-								id="lastName"
-								placeholder="Doe"
-								required
-								onChange={handleChange}
-							/>
-						</div>
-					</div>
-                    <Label htmlFor="email" className="text-neutral-700 mb-2">Email</Label>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="grid">
+                            <Label htmlFor="firstName" className="mb-2">First name</Label>
+                            <Input
+                                id="firstName"
+                                placeholder="John"
+                                className="mb-4"
+                                required
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="grid">
+                            <Label htmlFor="lastName" className="mb-2">Last name</Label>
+                            <Input
+                                id="lastName"
+                                placeholder="Doe"
+                                className="mb-4"
+                                required
+                                onChange={handleChange}
+                            />
+                        </div>
+                    </div>
+                    <Label htmlFor="email" className="mb-2">Email</Label>
                     <Input
                         id="email"
                         placeholder="user@example.com"
-                        className="border-neutral-400 text-neutral-700 mb-4 bg-white"
+                        className="mb-4"
                         required
                         onChange={handleChange}
                     />
-                    <Label htmlFor="password" className="text-neutral-700 mb-2">Password</Label>
+                    <Label htmlFor="password" className="mb-2">Password</Label>
                     <Input
                         id="password"
                         type="password"
                         placeholder="password"
-                        className="border-neutral-400 text-neutral-700 mb-4 bg-white"
+                        className="mb-4"
                         required
                         onChange={handleChange}
                     />
-                    <Label htmlFor="confirmedPassword" className="text-neutral-700 mb-2">Confirm Password</Label>
+                    <Label htmlFor="confirmedPassword" className="mb-2">Confirm Password</Label>
                     <Input
                         id="confirmedPassword"
                         type="password"
                         placeholder="confirm password"
-                        className="border-neutral-400 text-neutral-700 mb-4 bg-white"
+                        className="mb-4"
                         required
                         onChange={handleChange}
                     />
@@ -172,7 +170,7 @@ export default function Signup() {
                     </Button>
                 </form>
                 <div className="flex-row flex gap-2 mt-5 text-sm">
-                    <div>Have an account?</div><Link href={"/login"} className="font-bold text-blue-700">Login</Link>
+                    <div>Have an account?</div><Link href={"/login"} className="font-bold text-blue-500">Login</Link>
                 </div>
             </div>
         </div>

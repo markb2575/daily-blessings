@@ -14,6 +14,7 @@ const config: Config = {
     			'xs': '500px'
     		},
     		colors: {
+    			'brand-blue': 'hsl(var(--brand-blue))',
     			background: 'hsl(var(--background))',
     			foreground: 'hsl(var(--foreground))',
     			card: {

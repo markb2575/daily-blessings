@@ -11,6 +11,7 @@ body {
 @layer base {
     :root {
         --radius: 0.5rem;
+        --brand-blue: 221 83% 53%;
         --background: 0 0% 100%;
         --foreground: 224 71.4% 4.1%;
         --card: 0 0% 100%;
@@ -37,6 +38,7 @@ body {
         --chart-5: 27 87% 67%;
     }
   .dark {
+        --brand-blue: 217 91% 60%;
         --background: 0 0% 9%;
         --foreground: 0 0% 98%;
         --card: 0 0% 11%;

@@ -59,29 +59,29 @@ export default function Login() {
     }
     return (
         <div className="font-Open_Sans min-h-screen flex items-center justify-center">
-            <Card className="bg-gray-100 flex-col p-8 m-4 w-full xs:w-2/3 sm:w-1/2 lg:w-1/3 max-w-xl border-gray-400 shadow-lg flex">
-                <Label className="text-gray-700 mb-4 text-lg">I am a...</Label>
+            <Card className="bg-card flex-col p-8 m-4 w-full xs:w-2/3 sm:w-1/2 lg:w-1/3 max-w-xl border-border shadow-lg flex">
+                <Label className="mb-4 text-lg">I am a...</Label>
                 <div className="flex-col flex gap-4">
                     <Button
-                        className={`[&_svg]:size-5 mx2 w-full h-14 font-bold hover:bg-gray-200 justify-start border-2 border-gray-400 bg-white  ${role === "teacher" ? " border-blue-400 " : " border-0"}`}
+                        className={`[&_svg]:size-5 mx2 w-full h-14 font-bold hover:bg-accent justify-start border-2 bg-background text-foreground ${role === "teacher" ? "border-blue-500" : "border-border"}`}
                         onClick={() => {
                             setRole("teacher")
                         }}
                     >
                         <div>
-                            <div className="flex flex-row text-base gap-2 text-gray-700"><LucideSchool />Teacher</div>
-                            <div className="text-gray-700 text-xs">Teacher can create classes</div>
+                            <div className="flex flex-row text-base gap-2"><LucideSchool />Teacher</div>
+                            <div className="text-xs text-muted-foreground">Teacher can create classes</div>
                         </div>
                     </Button>
                     <Button
-                        className={`[&_svg]:size-5 mx2 w-full h-14 font-bold hover:bg-gray-200 justify-start border-2 border-gray-400 bg-white  ${role === "student" ? " border-blue-400 " : " border-0"}`}
+                        className={`[&_svg]:size-5 mx2 w-full h-14 font-bold hover:bg-accent justify-start border-2 bg-background text-foreground ${role === "student" ? "border-blue-500" : "border-border"}`}
                         onClick={() => {
                             setRole("student")
                         }}
                     >
                         <div>
-                            <div className="flex flex-row text-base gap-2 text-gray-700"><LucideGraduationCap />Student</div>
-                            <div className="text-gray-700 text-xs">Students can join classes with a code</div>
+                            <div className="flex flex-row text-base gap-2"><LucideGraduationCap />Student</div>
+                            <div className="text-xs text-muted-foreground">Students can join classes with a code</div>
                         </div>
                     </Button>
                     <Button onClick={handleUpdateRole} className="bg-blue-500 text-white font-semibold py-2 rounded hover:bg-blue-600 transition duration-200">Get Started</Button>
