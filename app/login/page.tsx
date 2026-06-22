@@ -69,7 +69,7 @@ export default function Login() {
         })
     }
     return (
-        <div className="font-Open_Sans min-h-screen flex items-center justify-center place-items-center h-screen flex-col w-screen">
+        <div className="font-Open_Sans flex min-h-dvh w-screen flex-col items-center justify-center py-8">
             <div className="w-[300px]">
                 <div className="text-3xl font-bold text-foreground text-center mb-8">Login</div>
                 <Button
